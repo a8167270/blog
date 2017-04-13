@@ -69,7 +69,7 @@ theme: BlueLake
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/a8167270/blogRecord.git
+  repo: ssh://git@github.com/a8167270/blogRecord.git
   branch: master
 
 jsonContent:
