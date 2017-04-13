@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="加油！"><title>Servlet与JSP | 随风的云</title><link rel="stylesheet" type="text/css" href="//fonts.css.network/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/blogRecord/css/style.css?v=1.3.0"><link rel="stylesheet" type="text/css" href="/blogRecord/css/highlight.css?v=1.3.0"><link rel="Shortcut Icon" href="/blogRecord/favicon.ico"><link rel="bookmark" href="/blogRecord/favicon.ico"><link rel="apple-touch-icon" href="/blogRecord/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blogRecord/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Servlet与JSP</h1><a id="logo" href="/blogRecord/.">随风的云</a><p class="description">坚持的意义在于坚持的本身，相信自己！</p></div><div id="nav-menu"><a href="/blogRecord/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/blogRecord/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/blogRecord/about/"><i class="fa fa-user"> 关于</i></a><a href="/blogRecord/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">Servlet与JSP</h1><div class="post-meta">Apr 13, 2017<span> | </span><span class="category"><a href="/blogRecord/categories/Java/">Java</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><div class="post-content"><p>在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。</p>
+<h2 id="1-Servlet的生命周期"><a href="#1-Servlet的生命周期" class="headerlink" title="1. Servlet的生命周期"></a>1. Servlet的生命周期</h2><p>服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求交付给相应的doGet和doPost进行处理。<br>首次创建servlet，会调用个init方法，因此，init应放置一次性设置代码的相关环节。</p>
+<h2 id="2-状态代码"><a href="#2-状态代码" class="headerlink" title="2. 状态代码"></a>2. 状态代码</h2><p>Web服务器对请求的响应，一般有一个状态行、一些响应报头、一个空行和相应的文档构成；Http响应的状态行由HTTP版本、一个状态代码和一段相关的消息组成。但是消息直接与状态代码相关，而http的版本是由服务器来决定的，故而，servlet需要做的只是设置状态代码。系统自动设置的代码为200。如果需要设置状态代码，则可以使用response.setStatus,response.sendRedirect或response.sendError方法。</p>
+<h3 id="设置状态代码：setStatus"><a href="#设置状态代码：setStatus" class="headerlink" title="设置状态代码：setStatus"></a>设置状态代码：setStatus</h3><blockquote>
+<p>在向客户程序发送任何文档内容之前设置状态代码</p>
+</blockquote>
+<p>setStatus方法以一个整数（状态代码，int类型）为参数，但为了避免出错，尽量不要使用数字，而要使用HttpServletResponse中定义的常量。每个常量的名字都来自于每个常量所对应的标准HTTP1.1消息，全部大写并添加SC（Status Code）前缀，状态代码404对应的消息为Not Found，与之对应的常量是SC_NOT_FOUND。</p>
+<p>Http1.1中可用的特定的状态代码，如下</p>
+<table>
+<thead>
+<tr>
+<th>代码区间</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100-199</td>
+<td>都是信息性的，标示客户应该采取的其他动作</td>
+</tr>
+<tr>
+<td>200-299</td>
+<td>标示请求成功</td>
+</tr>
+<tr>
+<td>300-399</td>
+<td>用于已移走的文件，常常包括Location报头，指出新的地址</td>
+</tr>
+<tr>
+<td>400-499</td>
+<td>表明由客户引发的错误</td>
+</tr>
+<tr>
+<td>500-599</td>
+<td>表示由服务器引发的错误</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Http相应报头"><a href="#Http相应报头" class="headerlink" title="Http相应报头"></a>Http相应报头</h2><p>指定报头，最常用的方式是使用HttpServletResponse的setHeader方法，这个方法接收两个字符串：报头的名称和报头的值。和设置状态代码一样，必须在返回实际的文档之前指定相关报头。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setHeader（String headerName,String headerValue）</div></pre></td></tr></table></figure>
+<p>Http允许相同的报头名多次出现，例如，多个Accept和Set-Cookie报头分别指定所支持的不同MIME类型和不同cookie。</p>
+<h2 id="3-过滤器"><a href="#3-过滤器" class="headerlink" title="3. 过滤器"></a>3. 过滤器</h2><p>Servlet过滤器可以动态的拦截请求和响应，可以实现以下目的：</p>
+<ul>
+<li>在客户端请求访问后端资源之前，拦截请求</li>
+<li>在服务端的响应发送客户端之前，处理响应</li>
+</ul>
+<h3 id="3-1-过滤器方法"><a href="#3-1-过滤器方法" class="headerlink" title="3.1 过滤器方法"></a>3.1 过滤器方法</h3><p>过滤器是实现<code>javax.servlet.Filter</code>接口的类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pub</div></pre></td></tr></table></figure></div><div class="tags"><a href="/blogRecord/tags/jsp/">jsp</a></div><div class="post-nav"><a href="/blogRecord/2017/04/13/我对代码的理解/" class="pre">我对代码的理解</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="widget"><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="请输入关键字..."/></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-gui"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blogRecord/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/blogRecord/categories/杂谈/">杂谈</a><span class="category-list-count">2</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/blogRecord/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/blogRecord/tags/生活/" style="font-size: 15px;">生活</a> <a href="/blogRecord/tags/代码/" style="font-size: 15px;">代码</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-fei"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blogRecord/archives/2017/04/">四月 2017</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blogRecord/2017/04/13/Servlet与JSP/">Servlet与JSP</a></li><li class="post-list-item"><a class="post-list-link" href="/blogRecord/2017/04/13/我对代码的理解/">我对代码的理解</a></li><li class="post-list-item"><a class="post-list-link" href="/blogRecord/2017/04/12/写在前面的话/">写在前面的话</a></li></ul></div></div></div></div><a id="totop" href="#top"></a><script type="text/javascript" src="/blogRecord/js/totop.js?v=1.3.0" async></script><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |<a href="/atom.xml">订阅本站</a> |<span>联系博主：<a href="mailto:a8167270@126.com" target="_blank" class="fa fa-email"> </a><a href="null" target="_blank" class="fa fa-weibo"></a><a href="https://github.com/a8167270" target="_blank" class="fa fa-github"> </a></span></p><p><span> Copyright &copy;<a href="/blogRecord/." rel="nofollow">fengjie</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span><span><a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> Theme </a>by<a rel="nofollow" target="_blank" href="https://github.com/chaooo"> Charles.</a></span></p></div></div></div><script type="text/javascript" src="/blogRecord/js/search.json.js?v=1.3.0"></script></body></html>
