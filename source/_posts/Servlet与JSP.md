@@ -44,6 +44,43 @@ Servlet过滤器可以动态的拦截请求和响应，可以实现以下目的�
 * 在客户端请求访问后端资源之前，拦截请求
 * 在服务端的响应发送客户端之前，处理响应
 
-### 3.1 过滤器方法
-过滤器是实现`javax.servlet.Filter`接口的类。
+### 3.1 过滤器接口
+过滤器是实现`javax.servlet.Filter`接口的类。接口包含以下三个方法：
 ![Filter interface](Servlet与JSP/filter.png)
+
+过滤器示例：
+```java
+//导入必需的 java 库
+import javax.servlet.*;
+import java.util.*;
+//实现 Filter 类
+public class LogFilter implements Filter  {
+	public void  init(FilterConfig config) throws ServletException {
+		// 获取初始化参数
+		String site = config.getInitParameter("Site"); 
+		// 输出初始化参数
+		System.out.println("网站名称: " + site); 
+	}
+	public void  doFilter(ServletRequest request, ServletResponse response, FilterChain chain){
+		// 输出站点名称
+		System.out.println("站点网址：http://www.runoob.com");
+		// 把请求传回过滤链
+		chain.doFilter(request,response);
+	}
+	public void destroy( ){
+		/* 在 Filter 实例被 Web 容器从服务移除之前调用 */
+	}
+}
+```
+
+### 3.2 过滤器实现
+```xml
+<filter>
+	<filter-name>LoginFilter</filter-name>
+	<filter-class>com.runoob.test.LogFilter</filter-class>
+	<init-param>
+		<param-name>Site</param-name>
+		<param-value>菜鸟教程</param-value>
+	</init-param>
+</filter>
+```
