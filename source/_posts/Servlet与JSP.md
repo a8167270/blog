@@ -26,7 +26,7 @@ Servlet架构图如下：
 
 ![Servlet生命周期](Servlet与JSP/ServletLifeCycle.jpg)
 
-## Servlet工作流程
+## Servlet的工作流程
 
 1. Web Client 向Servlet容器（Tomcat）发出Http请求
 2. Servlet容器接收Web Client的请求
@@ -37,7 +37,7 @@ Servlet架构图如下：
 7. HttpServlet调用HttpResponse对象的有关方法，生成响应数据。
 8. Servlet容器把HttpServlet的响应结果传给Web Client。
 
-## 创建Servlet对象的时机：
+## Servlet的创建
 
 1. Servlet容器启动时：读取web.xml配置文件中的信息，构造指定的Servlet对象，创建ServletConfig对象，同时将ServletConfig对象作为参数来调用Servlet对象的init方法。
 
@@ -46,7 +46,8 @@ Servlet架构图如下：
 3. Servlet Servlet容器在启动时自动创建Servlet，这是由在web.xml文件中为Servlet设置的<load-on-startup>属性决定的。从中我们也能看到同一个类型的Servlet对象在Servlet容器中以单例的形式存在。
 
 
-## Servlet配置方式
+# Servlet的配置
+## 映射配置
 ### web.xml配置
 ```xml
 <servlet>
@@ -70,13 +71,13 @@ public class HelloServlet extends HttpServlet {}
 ```
 上面的例子表示为，name为Hello的servlet，url为hello.view的。
 
-## 3. 过滤器
+## 过滤器
 Servlet过滤器可以动态的拦截请求和响应，可以实现以下目的：
 
 * 在客户端请求访问后端资源之前，拦截请求
 * 在服务端的响应发送客户端之前，处理响应
 
-### 3.1 过滤器接口
+### 过滤器接口
 过滤器是实现`javax.servlet.Filter`接口的类。接口包含以下三个方法：
 ![Filter interface](Servlet与JSP/filter.png)
 
@@ -108,7 +109,7 @@ public class LogFilter implements Filter  {
 }
 ```
 
-### 3.2 过滤器实现
+### 过滤器实现
 ```xml
 <filter>
 	<filter-name>LoginFilter</filter-name>
