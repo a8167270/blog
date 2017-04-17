@@ -3,11 +3,12 @@ title: Http协议
 date: 2017-04-14 10:43:19
 category: 网络
 tags: 协议
+toc: true
 ---
 
 大三学习了《计算机网络》的课程，但是老师只把几层协议简单的介绍了一下，就没有深入的去学习。这么多年，一直在使用Http，在去年的时候才开始使用到Https，回过头来发现关于Http的细节性的东西遗漏了很多。欠过账的迟早要还的！在我对Servlet进行研究时，发现很多底层上的参数搞不清楚到底是协议上的还是Servlet上的。所以，还是从Http的协议开始入手，重新学习和总结一下。
 
-## 1、Http简介
+## Http简介
 
 HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。
 
@@ -50,7 +51,7 @@ socket是为了实现通信过程而建立成来的通信管道，其真实的�
 
 socket只是一种连接模式，不是协议，tcp、udp，简单的说（虽然不准确）是两个最基本的协议,很多其它协议都是基于这两个协议如，http就是基于tcp的，.用socket可以创建tcp连接，也可以创建udp连接，这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。
 
-## 2.Http消息
+## Http消息
 HTTP使用统一资源标识符（Uniform Resource Identifiers, URI）来传输数据和建立连接。
 ### URL和URI区别
 |URI|URL|
@@ -124,7 +125,7 @@ name=Professional%20Ajax&publisher=Wiley
 HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。
 ![image_1bdbg60ceq2slf71po2416m781g.png-110.7kB][4]
 
-## 3、请求方法和状态码
+## 请求方法和状态码
 ### 请求方法
 根据HTTP标准，HTTP请求可以使用多种请求方法。
 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。
@@ -184,7 +185,7 @@ HTTP请求头提供了关于请求，响应或者其他的发送实体的信息�
 |Set-Cookie|	设置和页面关联的Cookie。Servlet不应使用response.setHeader("Set-Cookie", ...)，而是应使用HttpServletResponse提供的专用方法addCookie。参见下文有关Cookie设置的讨论。|
 |WWW-Authenticate	|客户应该在Authorization头中提供什么类型的授权信息？在包含401（Unauthorized）状态行的应答中这个头是必需的。例如，response.setHeader("WWW-Authenticate", "BASIC realm=＼"executives＼"")。 |
 
-## 4、补充
+## 补充
 ### get和post区别
 
 * GET在浏览器回退时是无害的，而POST会再次提交请求。
