@@ -4,10 +4,10 @@ date: 2017-04-14 10:56:56
 category: Java
 tags: JavaWeb
 ---
-# 1. 简介
+## 1. 简介
 HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。
 
-# 2. 使用方法
+## 2. 使用方法
 使用HttpClient发送请求、接收响应很简单，一般需要如下几步即可。 
 1. 创建HttpClient对象。
 2. 创建请求方法的实例，并指定请求URL。如果需要发送GET请求，创建HttpGet对象；如果需要发送POST请求，创建HttpPost对象。

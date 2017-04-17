@@ -4,10 +4,10 @@
 
 # Site
 title: 随风的云
-subtitle: 坚持的意义在于坚持的本身，相信自己！
+subtitle: 坚持的意义在于坚持的本身！
 description: 加油！
 author: fengjie
-language: zh-CN
+language: zh-Hans
 timezone: Asia/Shanghai
 
 # URL
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: BlueLake
+theme: maupassant
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
