@@ -77,7 +77,7 @@ Servlet过滤器可以动态的拦截请求和响应，可以实现以下目的�
 * 在客户端请求访问后端资源之前，拦截请求
 * 在服务端的响应发送客户端之前，处理响应
 
-### 过滤器接口
+### 实现过滤器接口
 过滤器是实现`javax.servlet.Filter`接口的类。接口包含以下三个方法：
 ![Filter interface](Servlet与JSP/filter.png)
 
@@ -109,17 +109,31 @@ public class LogFilter implements Filter  {
 }
 ```
 
-### 过滤器实现
+### xml配置过滤器
 ```xml
-<filter>
-	<filter-name>LoginFilter</filter-name>
-	<filter-class>com.runoob.test.LogFilter</filter-class>
-	<init-param>
-		<param-name>Site</param-name>
-		<param-value>菜鸟教程</param-value>
-	</init-param>
-</filter>
+<filter>指定一个过滤器。
+	<filter-name>用于为过滤器指定一个名字，该元素的内容不能为空。
+	<filter-class>元素用于指定过滤器的完整的限定类名。
+	<init-param>元素用于为过滤器指定初始化参数，它的子元素
+		<param-name>指定参数的名字，
+		<param-value>指定参数的值。在过滤器中，可以使用FilterConfig接口对象来访问初始化参数。
+	
+<filter-mapping>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
+	<filter-name>子元素用于设置filter的注册名称。该值必须是在<filter>元素中声明过的过滤器的名字
+	<url-pattern>设置 filter 所拦截的请求路径(过滤器关联的URL样式)
+	<servlet-name>指定过滤器所拦截的Servlet名称。
+	<dispatcher>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是REQUEST,INCLUDE,FORWARD和ERROR之一，默认REQUEST。用户可以设置多个<dispatcher>子元素用来指定 Filter 对资源的多种调用方式进行拦截。
 ```
+
+<dispatcher>子元素可以设置的值及其意义
+
+|参数|描述|
+|---|---|
+|REQUEST|当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。|
+|INCLUDE|如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。|
+|FORWARD|如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。|
+|ERROR|如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。|
+
 
 ## 2. 状态代码
 
