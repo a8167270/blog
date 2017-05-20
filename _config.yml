@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: BlueLake
+theme: new-vno
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -90,3 +90,11 @@ jsonContent:
     excerpt: false
     categories: false
     tags: true
+
+image_stream:
+  #jquery: //cdn.bootcss.com/jquery/2.1.0/jquery.min.js
+  jquery: false
+  jquery_lazyload: //cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js
+  img_placeholder: http://ww4.sinaimg.cn/large/e724cbefgw1etyppy7bgwg2001001017.gif
+
+disqus_shortname: liuyun
