@@ -22,6 +22,8 @@ Struts2基于Servlet框架的filter机制实现。
 当tomcat启动时，会通过初始化StrutsPrepareAndExecuteFilter加载struts2的相关配置信息。
 系统运行时，会拦截request请求，执行struts2的流程。
 
+<!-- more -->
+
 ## request处理流程
 
 1. 客户端发送请求

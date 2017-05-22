@@ -26,6 +26,8 @@ Servlet架构图如下：
 
 ![Servlet生命周期](Servlet与JSP/ServletLifeCycle.jpg)
 
+<!-- more -->
+
 ## Servlet的工作流程
 
 1. Web Client 向Servlet容器（Tomcat）发出Http请求

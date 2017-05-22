@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 随风的云
+title: Liu Yun`s Blog
 subtitle: 坚持的意义在于坚持的本身！
 description: 加油！
-author: fengjie
-language: zh-CN
+author: liuyun
+language: zh-Hans
 timezone: Asia/Shanghai
 
 # URL
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: new-vno
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -98,3 +98,6 @@ image_stream:
   img_placeholder: http://ww4.sinaimg.cn/large/e724cbefgw1etyppy7bgwg2001001017.gif
 
 disqus_shortname: liuyun
+
+index_generator:
+  per_page: 5
