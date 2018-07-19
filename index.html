@@ -20,8 +20,6 @@
 <meta name="twitter:title" content="Liu Yun&#39;s Blog">
 
     
-    <link rel="alternative" href="/atom.xml" title="Liu Yun&#39;s Blog" type="application/atom+xml">
-    
     
     <link rel="icon" href="/blogRecord/img/favicon.ico">
     
@@ -75,20 +73,122 @@
     <div id="container">
       <div id="main">
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/blogRecord/2018/07/19/hello-world/" title="Hello World" itemprop="url">
-  
-    <h1 itemprop="name">Hello World</h1>
+   
     
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2018/07/19/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-19T07:19:06.798Z" itemprop="datePublished"> Published 2018-07-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
         
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
     
-    <time datetime="2018-07-19T07:19:06.798Z" itemprop="datePublished">2018-07-19</time>
-  </a>
-</section>
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/14/Http协议/" title="Http协议" itemprop="url">Http协议</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-14T02:43:19.000Z" itemprop="datePublished"> Published 2017-04-14</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>大三学习了《计算机网络》的课程，但是老师只把几层协议简单的介绍了一下，就没有深入的去学习。这么多年，一直在使用Http，在去年的时候才开始使用到Https，回过头来发现关于Http的细节性的东西遗漏了很多。欠过账的迟早要还的！在我对Servlet进行研究时，发现很多底层上的参数搞不清楚到底是协议上的还是Servlet上的。所以，还是从Http的协议开始入手，重新学习和总结一下。</p>
+<h2 id="Http简介"><a href="#Http简介" class="headerlink" title="Http简介"></a>Http简介</h2><p>HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。</p>
+<p>HTTP协议工作于客户端-服务端架构为上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据接收到的请求后，向客户端发送响应信息。</p>
+<p><img src="http://static.zybuluo.com/a8167270/or284kgq1fb4jnl0r5nc05be/image_1bdb8ch37lma16jm7ng5qludb9.png" alt="image_1bdb8ch37lma16jm7ng5qludb9.png-55.7kB"></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/14/Http协议/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/网络/">网络</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/协议/">协议</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
 
 
 
@@ -107,8 +207,30 @@
 
 
   
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/blogRecord/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
 
   
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/blogRecord/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
 
   <div class="linkslist">
   <p class="asidetitle">Links</p>
@@ -122,19 +244,6 @@
         
     </ul>
 </div>
-
-  
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=&verifier=&dpc=1"></iframe>
-</div>
-
 
 </aside>
 </div>
