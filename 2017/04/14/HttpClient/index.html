@@ -4,24 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Hello World | Liu Yun&#39;s Blog</title>
+    <title>HttpClient | Liu Yun&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Liu Yun">
     
 
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+    <meta name="description" content="1. 简介HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2. 使用方法使用HttpClient发">
+<meta name="keywords" content="JavaWeb">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://a8167270.github.io/blogRecord/2018/07/19/hello-world/index.html">
+<meta property="og:title" content="HttpClient">
+<meta property="og:url" content="https://a8167270.github.io/blogRecord/2017/04/14/HttpClient/index.html">
 <meta property="og:site_name" content="Liu Yun&#39;s Blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="1. 简介HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2. 使用方法使用HttpClient发">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-19T07:19:06.801Z">
+<meta property="og:updated_time" content="2018-07-19T09:45:27.167Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="HttpClient">
+<meta name="twitter:description" content="1. 简介HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2. 使用方法使用HttpClient发">
 
     
     
@@ -81,14 +82,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blogRecord/2018/07/19/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/blogRecord/2017/04/14/HttpClient/" title="HttpClient" itemprop="url">HttpClient</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
 		
   <p class="article-time">
-    <time datetime="2018-07-19T07:19:06.798Z" itemprop="datePublished"> Published 2018-07-19</time>
+    <time datetime="2017-04-14T02:56:56.000Z" itemprop="datePublished"> Published 2017-04-14</time>
     
   </p>
 </header>
@@ -97,24 +98,37 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-number">1.</span> <span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-使用方法"><span class="toc-number">2.</span> <span class="toc-text">2. 使用方法</span></a></li></ol>
 		
 		</div>
 		
-		<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+		<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。</p>
+<h2 id="2-使用方法"><a href="#2-使用方法" class="headerlink" title="2. 使用方法"></a>2. 使用方法</h2><p>使用HttpClient发送请求、接收响应很简单，一般需要如下几步即可。 </p>
+<ol>
+<li>创建HttpClient对象。</li>
+<li>创建请求方法的实例，并指定请求URL。如果需要发送GET请求，创建HttpGet对象；如果需要发送POST请求，创建HttpPost对象。</li>
+<li>如果需要发送请求参数，可调用HttpGet、HttpPost共同的setParams(HetpParams params)方法来添加请求参数；对于HttpPost对象而言，也可调用setEntity(HttpEntity entity)方法来设置请求参数。</li>
+<li>调用HttpClient对象的execute(HttpUriRequest request)发送请求，该方法返回一个HttpResponse。</li>
+<li>调用HttpResponse的getAllHeaders()、getHeaders(String name)等方法可获取服务器的响应头；调用HttpResponse的getEntity()方法可获取HttpEntity对象，该对象包装了服务器的响应内容。程序可通过该对象获取服务器的响应内容。</li>
+<li>释放连接。无论执行方法是否成功，都必须释放连接</li>
+</ol>
+<a id="more"></a>
+<p>代码整体示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.httpclient.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.httpclient.methods.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.httpclient.params.HttpMethodParams;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpClientTutorial</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String url = <span class="string">"http://www.apache.org/"</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      </span><br><span class="line">    <span class="comment">// 创建HttpClient对象</span></span><br><span class="line">    HttpClient client = <span class="keyword">new</span> HttpClient();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建请求方法的实例</span></span><br><span class="line">    GetMethod method = <span class="keyword">new</span> GetMethod(url);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 请求参数</span></span><br><span class="line">    method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, </span><br><span class="line">    		<span class="keyword">new</span> DefaultHttpMethodRetryHandler(<span class="number">3</span>, <span class="keyword">false</span>));</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// Execute the method.</span></span><br><span class="line">      <span class="keyword">int</span> statusCode = client.executeMethod(method);</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (statusCode != HttpStatus.SC_OK) &#123;</span><br><span class="line">        System.err.println(<span class="string">"Method failed: "</span> + method.getStatusLine());</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Read the response body.</span></span><br><span class="line">      <span class="keyword">byte</span>[] responseBody = method.getResponseBody();</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Deal with the response.</span></span><br><span class="line">      <span class="comment">// Use caution: ensure correct character encoding and is not binary data</span></span><br><span class="line">      System.out.println(<span class="keyword">new</span> String(responseBody));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (HttpException e) &#123;</span><br><span class="line">        </span><br><span class="line">      System.err.println(<span class="string">"Fatal protocol violation: "</span> + e.getMessage());</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        </span><br><span class="line">      System.err.println(<span class="string">"Fatal transport error: "</span> + e.getMessage());</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        </span><br><span class="line">      <span class="comment">// Release the connection.</span></span><br><span class="line">      method.releaseConnection();</span><br><span class="line">    &#125;  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/JavaWeb/">JavaWeb</a>
+  </div>
 
 </div>
 
@@ -122,7 +136,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://a8167270.github.io/blogRecord/2018/07/19/hello-world/" data-title="Hello World | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="https://a8167270.github.io/blogRecord/2017/04/14/HttpClient/" data-title="HttpClient | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -135,11 +149,19 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/blogRecord/2017/04/25/struts2源码阅读/" title="struts2源码阅读">
+  <strong>上一篇：</strong><br/>
+  <span>
+  struts2源码阅读</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/blogRecord/2017/04/25/struts2源码阅读/"  title="struts2源码阅读">
+<a href="/blogRecord/2017/04/14/Http协议/"  title="Http协议">
  <strong>下一篇：</strong><br/> 
- <span>struts2源码阅读
+ <span>Http协议
 </span>
 </a>
 </div>
@@ -156,7 +178,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-number">1.</span> <span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-使用方法"><span class="toc-number">2.</span> <span class="toc-text">2. 使用方法</span></a></li></ol>
  
   </div>
 

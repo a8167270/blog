@@ -137,6 +137,139 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/blogRecord/2017/04/25/struts2源码阅读/" title="struts2源码阅读" itemprop="url">struts2源码阅读</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-25T05:46:42.000Z" itemprop="datePublished"> Published 2017-04-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <!---->
+<h1 id="Struts2运行原理"><a href="#Struts2运行原理" class="headerlink" title="Struts2运行原理"></a>Struts2运行原理</h1><p>Struts2基于Servlet框架的filter机制实现。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>struts2<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>struts2<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>当tomcat启动时，会通过初始化StrutsPrepareAndExecuteFilter加载struts2的相关配置信息。<br>系统运行时，会拦截request请求，执行struts2的流程。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/25/struts2源码阅读/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/struts2/">struts2</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/14/HttpClient/" title="HttpClient" itemprop="url">HttpClient</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-14T02:56:56.000Z" itemprop="datePublished"> Published 2017-04-14</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。</p>
+<h2 id="2-使用方法"><a href="#2-使用方法" class="headerlink" title="2. 使用方法"></a>2. 使用方法</h2><p>使用HttpClient发送请求、接收响应很简单，一般需要如下几步即可。 </p>
+<ol>
+<li>创建HttpClient对象。</li>
+<li>创建请求方法的实例，并指定请求URL。如果需要发送GET请求，创建HttpGet对象；如果需要发送POST请求，创建HttpPost对象。</li>
+<li>如果需要发送请求参数，可调用HttpGet、HttpPost共同的setParams(HetpParams params)方法来添加请求参数；对于HttpPost对象而言，也可调用setEntity(HttpEntity entity)方法来设置请求参数。</li>
+<li>调用HttpClient对象的execute(HttpUriRequest request)发送请求，该方法返回一个HttpResponse。</li>
+<li>调用HttpResponse的getAllHeaders()、getHeaders(String name)等方法可获取服务器的响应头；调用HttpResponse的getEntity()方法可获取HttpEntity对象，该对象包装了服务器的响应内容。程序可通过该对象获取服务器的响应内容。</li>
+<li>释放连接。无论执行方法是否成功，都必须释放连接</li>
+</ol>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/14/HttpClient/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/JavaWeb/">JavaWeb</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/blogRecord/2017/04/14/Http协议/" title="Http协议" itemprop="url">Http协议</a>
   </h1>
   <p class="article-author">By
@@ -195,6 +328,208 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/13/Servlet与JSP/" title="Servlet" itemprop="url">Servlet</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-13T07:33:26.000Z" itemprop="datePublished"> Published 2017-04-13</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。</p>
+<h1 id="Servlet简介"><a href="#Servlet简介" class="headerlink" title="Servlet简介"></a>Servlet简介</h1><h2 id="Servlet的生命周期"><a href="#Servlet的生命周期" class="headerlink" title="Servlet的生命周期"></a>Servlet的生命周期</h2><p>服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求交付给相应的doGet和doPost进行处理。</p>
+<p>Servlet 生命周期：Servlet 加载—&gt;实例化—&gt;服务—&gt;销毁。</p>
+<ol>
+<li><p>init（）：在Servlet的生命周期中，仅执行一次init()方法。它是在服务器装入Servlet时执行的，负责初始化Servlet对象。可以配置服务器，以在启动服务器或客户机首次访问Servlet时装入Servlet。无论有多少客户机访问Servlet，都不会重复执行init（）。</p>
+</li>
+<li><p>service（）：它是Servlet的核心，负责响应客户的请求。每当一个客户请求一个HttpServlet对象，该对象的Service()方法就要调用，而且传递给这个方法一个“请求”（ServletRequest）对象和一个“响应”（ServletResponse）对象作为参数。在HttpServlet中已存在Service()方法。默认的服务功能是调用与HTTP请求的方法相应的do功能。</p>
+</li>
+<li><p>destroy（）： 仅执行一次，在服务器端停止且卸载Servlet时执行该方法。当Servlet对象退出生命周期时，负责释放占用的资源。一个Servlet在运行service()方法时可能会产生其他的线程，因此需要确认在调用destroy()方法时，这些线程已经终止或完成。</p>
+</li>
+</ol>
+<p>Servlet架构图如下：</p>
+<p><img src="Servlet与JSP/ServletLifeCycle.jpg" alt="Servlet生命周期"></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/13/Servlet与JSP/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/JavaWeb/">JavaWeb</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/13/我对代码的理解/" title="我对代码的理解" itemprop="url">我对代码的理解</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-13T01:07:51.000Z" itemprop="datePublished"> Published 2017-04-13</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>转眼已经毕业快两年，从本科刚开始学C语言，到现在Java，object-c语言开发，中间接触过C#，python，jsp，jQuery，JavaScript，scala，C++，html，css，markdown等多种语言。在读研究生的时候，去日本的一家公司实习时，见识过规范的开发模式和优秀的架构，也在实验室的两年里维护了一堆漏洞百出的代码。学习过《clean code》和《重构》等关于代码质量的书，也阅读过阿里和谷歌的代码规范。阅读优秀的代码是一种享受，阅读烂代码是一种折磨。所以我想谈一谈自己对优秀的代码的一点理解。</p>
+<h2 id="美观"><a href="#美观" class="headerlink" title="美观"></a>美观</h2><p>代码整体外观应该是赏心悦目的。</p>
+<p>打开编辑器，代码整体布局结构给人第一印象应该是赏心悦目的。这里的赏心悦目具体表现在代码行长度，空格，函数块的行数，及规范化的代码注释等。这些条件都处理好了，不论是什么语言，给人的感觉都应该是整齐，规范。现在编辑工具大都支持自动规范代码的功能，比如Visual studio和eclipse等，但是有的时候自动规范的代码并不一定美观，还需要自己去处理。</p>
+<h2 id="易读"><a href="#易读" class="headerlink" title="易读"></a>易读</h2><p>阅读代码，不看注释就能理解。</p>
+<p>代码的易读性是代码的首要条件。代码就像是写文章，是给其他人看的。易读性的代码具体体现在函数的命名，参数的设置，函数命名可以加长，但是参数不易过多。Objective-C语言是个很好的例子，代码如下示意：</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/13/我对代码的理解/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/杂谈/">杂谈</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/代码/">代码</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/12/写在前面的话/" title="写在前面的话" itemprop="url">写在前面的话</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-12T06:19:11.000Z" itemprop="datePublished"> Published 2017-04-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在读研究生的时候，看到师兄学习《算法导论》，读书笔记记录了厚厚的一本，深受感染，所以很多时候就把学习笔记记录到纸质的笔记本上，两年下来也有一两个小本。研究生毕业后，几经周折，终于在路上给搞丢了，心疼的一塌糊涂。</p>
+<p>参加工作后，又重新开始买了一个大本记录笔记，但是问题还是出现了，在学校的时候还不明显，工作了笔记本不能随身携带，查阅很不方便。于是开始折腾blog！</p>
+<p>csdn，博客园，简书，SegmentFault都尝试过，最终的解决方案是，作业部落VIP版 + SegmentFault。前两天回看SegmentFault的文章，感觉样式好丑，并且担心图片数据丢失问题，所以就开始想自己建一个blog。于是就使用github + hexo搭建一个静态blog。</p>
+<p>第一个感觉就是方便，私密。之前在其他地方的blog，会慢慢地转移到这个上面来。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/blogRecord/2017/04/12/写在前面的话/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/杂谈/">杂谈</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/生活/">生活</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
 </div>
       <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
@@ -212,6 +547,14 @@
 		<ul>
 		
 		  
+			<li><a href="/blogRecord/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+		  
+		
+		  
 			<li><a href="/blogRecord/categories/网络/" title="网络">网络<sup>1</sup></a></li>
 		  
 		
@@ -225,7 +568,23 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/blogRecord/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/blogRecord/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 			
 		
 		</ul>
