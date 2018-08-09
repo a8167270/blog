@@ -1,0 +1,601 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Servlet | Liu Yun&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liu Yun">
+    
+
+    
+    <meta name="description" content="在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。 Servlet简介Servlet的生命周期服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求">
+<meta name="keywords" content="JavaWeb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Servlet">
+<meta property="og:url" content="https://a8167270.github.io/blogRecord/2017/04/13/Servlet与JSP/index.html">
+<meta property="og:site_name" content="Liu Yun&#39;s Blog">
+<meta property="og:description" content="在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。 Servlet简介Servlet的生命周期服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://a8167270.github.io/blogRecord/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
+<meta property="og:image" content="https://a8167270.github.io/blogRecord/2017/04/13/Servlet与JSP/Servlet与JSP/filter.png">
+<meta property="og:updated_time" content="2018-07-19T09:45:27.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Servlet">
+<meta name="twitter:description" content="在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。 Servlet简介Servlet的生命周期服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求">
+<meta name="twitter:image" content="https://a8167270.github.io/blogRecord/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
+
+    
+    
+    <link rel="icon" href="/blogRecord/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/blogRecord/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blogRecord/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/blogRecord/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/blogRecord/"><img src="/blogRecord/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/blogRecord/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
+				<h2 class="blog-motto">坚持的意义在于坚持的本身！</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/blogRecord/">Home</a></li>
+					
+						<li><a href="/blogRecord/archives">Archives</a></li>
+					
+						<li><a href="/blogRecord/tags">Tags</a></li>
+					
+						<li><a href="/blogRecord/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2017/04/13/Servlet与JSP/" title="Servlet" itemprop="url">Servlet</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-04-13T07:33:26.000Z" itemprop="datePublished"> Published 2017-04-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Servlet简介"><span class="toc-number">1.</span> <span class="toc-text">Servlet简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的生命周期"><span class="toc-number">1.1.</span> <span class="toc-text">Servlet的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的工作流程"><span class="toc-number">1.2.</span> <span class="toc-text">Servlet的工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的创建"><span class="toc-number">1.3.</span> <span class="toc-text">Servlet的创建</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Servlet的配置"><span class="toc-number">2.</span> <span class="toc-text">Servlet的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#映射配置"><span class="toc-number">2.1.</span> <span class="toc-text">映射配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#web-xml配置"><span class="toc-number">2.1.1.</span> <span class="toc-text">web.xml配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#servlet3-0-注解"><span class="toc-number">2.1.2.</span> <span class="toc-text">servlet3.0 注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤器"><span class="toc-number">2.2.</span> <span class="toc-text">过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实现过滤器接口"><span class="toc-number">2.2.1.</span> <span class="toc-text">实现过滤器接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xml配置过滤器"><span class="toc-number">2.2.2.</span> <span class="toc-text">xml配置过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-状态代码"><span class="toc-number">2.3.</span> <span class="toc-text">2. 状态代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置状态代码：setStatus"><span class="toc-number">2.3.1.</span> <span class="toc-text">设置状态代码：setStatus</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Http相应报头"><span class="toc-number">2.4.</span> <span class="toc-text">Http相应报头</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。</p>
+<h1 id="Servlet简介"><a href="#Servlet简介" class="headerlink" title="Servlet简介"></a>Servlet简介</h1><h2 id="Servlet的生命周期"><a href="#Servlet的生命周期" class="headerlink" title="Servlet的生命周期"></a>Servlet的生命周期</h2><p>服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求交付给相应的doGet和doPost进行处理。</p>
+<p>Servlet 生命周期：Servlet 加载—&gt;实例化—&gt;服务—&gt;销毁。</p>
+<ol>
+<li><p>init（）：在Servlet的生命周期中，仅执行一次init()方法。它是在服务器装入Servlet时执行的，负责初始化Servlet对象。可以配置服务器，以在启动服务器或客户机首次访问Servlet时装入Servlet。无论有多少客户机访问Servlet，都不会重复执行init（）。</p>
+</li>
+<li><p>service（）：它是Servlet的核心，负责响应客户的请求。每当一个客户请求一个HttpServlet对象，该对象的Service()方法就要调用，而且传递给这个方法一个“请求”（ServletRequest）对象和一个“响应”（ServletResponse）对象作为参数。在HttpServlet中已存在Service()方法。默认的服务功能是调用与HTTP请求的方法相应的do功能。</p>
+</li>
+<li><p>destroy（）： 仅执行一次，在服务器端停止且卸载Servlet时执行该方法。当Servlet对象退出生命周期时，负责释放占用的资源。一个Servlet在运行service()方法时可能会产生其他的线程，因此需要确认在调用destroy()方法时，这些线程已经终止或完成。</p>
+</li>
+</ol>
+<p>Servlet架构图如下：</p>
+<p><img src="Servlet与JSP/ServletLifeCycle.jpg" alt="Servlet生命周期"></p>
+<a id="more"></a>
+<h2 id="Servlet的工作流程"><a href="#Servlet的工作流程" class="headerlink" title="Servlet的工作流程"></a>Servlet的工作流程</h2><ol>
+<li>Web Client 向Servlet容器（Tomcat）发出Http请求</li>
+<li>Servlet容器接收Web Client的请求</li>
+<li>Servlet容器创建一个HttpRequest对象，将Web Client请求的信息封装到这个对象中。</li>
+<li>Servlet容器创建一个HttpResponse对象</li>
+<li>Servlet容器调用HttpServlet对象的service方法，把HttpRequest对象与HttpResponse对象作为参数传给 HttpServlet 对象。</li>
+<li>HttpServlet调用HttpRequest对象的有关方法，获取Http请求信息。</li>
+<li>HttpServlet调用HttpResponse对象的有关方法，生成响应数据。</li>
+<li>Servlet容器把HttpServlet的响应结果传给Web Client。</li>
+</ol>
+<h2 id="Servlet的创建"><a href="#Servlet的创建" class="headerlink" title="Servlet的创建"></a>Servlet的创建</h2><ol>
+<li><p>Servlet容器启动时：读取web.xml配置文件中的信息，构造指定的Servlet对象，创建ServletConfig对象，同时将ServletConfig对象作为参数来调用Servlet对象的init方法。</p>
+</li>
+<li><p>在Servlet容器启动后：客户首次向Servlet发出请求，Servlet容器会判断内存中是否存在指定的Servlet对象，如果没有则创建它，然后根据客户的请求创建HttpRequest、HttpResponse对象，从而调用Servlet对象的service方法。</p>
+</li>
+<li><p>Servlet Servlet容器在启动时自动创建Servlet，这是由在web.xml文件中为Servlet设置的<load-on-startup>属性决定的。从中我们也能看到同一个类型的Servlet对象在Servlet容器中以单例的形式存在。</load-on-startup></p>
+</li>
+</ol>
+<h1 id="Servlet的配置"><a href="#Servlet的配置" class="headerlink" title="Servlet的配置"></a>Servlet的配置</h1><h2 id="映射配置"><a href="#映射配置" class="headerlink" title="映射配置"></a>映射配置</h2><h3 id="web-xml配置"><a href="#web-xml配置" class="headerlink" title="web.xml配置"></a>web.xml配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>HelloWorld<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>jp.co.xiehl.servlet.ch7.HelloWorldServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line">//servlet映射配置</span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>HelloWorld<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/hello<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line"></span><br><span class="line">访问时：localhost:8080/工程名/hello即可。</span><br></pre></td></tr></table></figure>
+<h3 id="servlet3-0-注解"><a href="#servlet3-0-注解" class="headerlink" title="servlet3.0 注解"></a>servlet3.0 注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet</span>(name=”Hello”, urlPatterns=&#123;“/hello.view”&#125;, loadOnStartup=<span class="number">1</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的例子表示为，name为Hello的servlet，url为hello.view的。</p>
+<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><p>Servlet过滤器可以动态的拦截请求和响应，可以实现以下目的：</p>
+<ul>
+<li>在客户端请求访问后端资源之前，拦截请求</li>
+<li>在服务端的响应发送客户端之前，处理响应</li>
+</ul>
+<h3 id="实现过滤器接口"><a href="#实现过滤器接口" class="headerlink" title="实现过滤器接口"></a>实现过滤器接口</h3><p>过滤器是实现<code>javax.servlet.Filter</code>接口的类。接口包含以下三个方法：<br><img src="Servlet与JSP/filter.png" alt="Filter interface"></p>
+<p>过滤器示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导入必需的 java 库</span></span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实现 Filter 类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span>  </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">init</span><span class="params">(FilterConfig config)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		<span class="comment">// 获取初始化参数</span></span><br><span class="line">		String site = config.getInitParameter(<span class="string">"Site"</span>); </span><br><span class="line">		<span class="comment">// 输出初始化参数</span></span><br><span class="line">		System.out.println(<span class="string">"网站名称: "</span> + site); </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span></span>&#123;</span><br><span class="line">		<span class="comment">// 输出站点名称</span></span><br><span class="line">		System.out.println(<span class="string">"站点网址：http://www.runoob.com"</span>);</span><br><span class="line">		<span class="comment">// 把请求传回过滤链</span></span><br><span class="line">		chain.doFilter(request,response);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">( )</span></span>&#123;</span><br><span class="line">		<span class="comment">/* 在 Filter 实例被 Web 容器从服务移除之前调用 */</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="xml配置过滤器"><a href="#xml配置过滤器" class="headerlink" title="xml配置过滤器"></a>xml配置过滤器</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span>指定一个过滤器。</span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>用于为过滤器指定一个名字，该元素的内容不能为空。</span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>元素用于指定过滤器的完整的限定类名。</span><br><span class="line">	<span class="tag">&lt;<span class="name">init-param</span>&gt;</span>元素用于为过滤器指定初始化参数，它的子元素</span><br><span class="line">		<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>指定参数的名字，</span><br><span class="line">		<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>指定参数的值。在过滤器中，可以使用FilterConfig接口对象来访问初始化参数。</span><br><span class="line">	</span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径</span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>子元素用于设置filter的注册名称。该值必须是在<span class="tag">&lt;<span class="name">filter</span>&gt;</span>元素中声明过的过滤器的名字</span><br><span class="line">	<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>设置 filter 所拦截的请求路径(过滤器关联的URL样式)</span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>指定过滤器所拦截的Servlet名称。</span><br><span class="line">	<span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是REQUEST,INCLUDE,FORWARD和ERROR之一，默认REQUEST。用户可以设置多个<span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>子元素用来指定 Filter 对资源的多种调用方式进行拦截。</span><br></pre></td></tr></table></figure>
+<p><dispatcher>子元素可以设置的值及其意义</dispatcher></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REQUEST</td>
+<td>当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</td>
+</tr>
+<tr>
+<td>INCLUDE</td>
+<td>如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</td>
+</tr>
+<tr>
+<td>FORWARD</td>
+<td>如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-状态代码"><a href="#2-状态代码" class="headerlink" title="2. 状态代码"></a>2. 状态代码</h2><p>Web服务器对请求的响应，一般有一个状态行、一些响应报头、一个空行和相应的文档构成；Http响应的状态行由HTTP版本、一个状态代码和一段相关的消息组成。但是消息直接与状态代码相关，而http的版本是由服务器来决定的，故而，servlet需要做的只是设置状态代码。系统自动设置的代码为200。如果需要设置状态代码，则可以使用response.setStatus,response.sendRedirect或response.sendError方法。</p>
+<h3 id="设置状态代码：setStatus"><a href="#设置状态代码：setStatus" class="headerlink" title="设置状态代码：setStatus"></a>设置状态代码：setStatus</h3><blockquote>
+<p>在向客户程序发送任何文档内容之前设置状态代码</p>
+</blockquote>
+<p>setStatus方法以一个整数（状态代码，int类型）为参数，但为了避免出错，尽量不要使用数字，而要使用HttpServletResponse中定义的常量。每个常量的名字都来自于每个常量所对应的标准HTTP1.1消息，全部大写并添加SC（Status Code）前缀，状态代码404对应的消息为Not Found，与之对应的常量是SC_NOT_FOUND。</p>
+<p>Http1.1中可用的特定的状态代码，如下</p>
+<table>
+<thead>
+<tr>
+<th>代码区间</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100-199</td>
+<td>都是信息性的，标示客户应该采取的其他动作</td>
+</tr>
+<tr>
+<td>200-299</td>
+<td>标示请求成功</td>
+</tr>
+<tr>
+<td>300-399</td>
+<td>用于已移走的文件，常常包括Location报头，指出新的地址</td>
+</tr>
+<tr>
+<td>400-499</td>
+<td>表明由客户引发的错误</td>
+</tr>
+<tr>
+<td>500-599</td>
+<td>表示由服务器引发的错误</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Http相应报头"><a href="#Http相应报头" class="headerlink" title="Http相应报头"></a>Http相应报头</h2><p>指定报头，最常用的方式是使用HttpServletResponse的setHeader方法，这个方法接收两个字符串：报头的名称和报头的值。和设置状态代码一样，必须在返回实际的文档之前指定相关报头。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setHeader（String headerName,String headerValue）</span><br></pre></td></tr></table></figure>
+<p>Http允许相同的报头名多次出现，例如，多个Accept和Set-Cookie报头分别指定所支持的不同MIME类型和不同cookie。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Java/">Java</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/JavaWeb/">JavaWeb</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://a8167270.github.io/blogRecord/2017/04/13/Servlet与JSP/" data-title="Servlet | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blogRecord/2017/04/14/Http协议/" title="Http协议">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Http协议</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blogRecord/2017/04/13/我对代码的理解/"  title="我对代码的理解">
+ <strong>下一篇：</strong><br/> 
+ <span>我对代码的理解
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Servlet简介"><span class="toc-number">1.</span> <span class="toc-text">Servlet简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的生命周期"><span class="toc-number">1.1.</span> <span class="toc-text">Servlet的生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的工作流程"><span class="toc-number">1.2.</span> <span class="toc-text">Servlet的工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlet的创建"><span class="toc-number">1.3.</span> <span class="toc-text">Servlet的创建</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Servlet的配置"><span class="toc-number">2.</span> <span class="toc-text">Servlet的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#映射配置"><span class="toc-number">2.1.</span> <span class="toc-text">映射配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#web-xml配置"><span class="toc-number">2.1.1.</span> <span class="toc-text">web.xml配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#servlet3-0-注解"><span class="toc-number">2.1.2.</span> <span class="toc-text">servlet3.0 注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤器"><span class="toc-number">2.2.</span> <span class="toc-text">过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实现过滤器接口"><span class="toc-number">2.2.1.</span> <span class="toc-text">实现过滤器接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xml配置过滤器"><span class="toc-number">2.2.2.</span> <span class="toc-text">xml配置过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-状态代码"><span class="toc-number">2.3.</span> <span class="toc-text">2. 状态代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置状态代码：setStatus"><span class="toc-number">2.3.1.</span> <span class="toc-text">设置状态代码：setStatus</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Http相应报头"><span class="toc-number">2.4.</span> <span class="toc-text">Http相应报头</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/blogRecord/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/blogRecord/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://segmentfault.com/u/a8167270" target="_blank" title="Segmentfault">Segmentfault</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 始终相信努力会有结果！ <br/>
+			</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/blogRecord/about" target="_blank" title="Liu Yun">Liu Yun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/blogRecord/js/jquery-2.0.3.min.js"></script>
+<script src="/blogRecord/js/jquery.imagesloaded.min.js"></script>
+<script src="/blogRecord/js/gallery.js"></script>
+<script src="/blogRecord/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/blogRecord/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blogRecord/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1429030d1f3dbf7c167565c77aab3bc8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/blogRecord/img/scrollup.png"/></a>
+	</div>
+	<script src="/blogRecord/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

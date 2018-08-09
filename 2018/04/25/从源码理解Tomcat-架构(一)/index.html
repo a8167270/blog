@@ -1,0 +1,540 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>从源码理解Tomcat-架构(一) | Liu Yun&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liu Yun">
+    
+
+    
+    <meta name="description" content="从源码去理解Tomcat，可以从以下几条线入手：  Tomcat的整体架构、包括Container，Connector等组件。 Tomcat的启动过程、Lifecycle的原理。 Tomcat的服务过程。 Tomcat的类加载，和并发控制。  什么是Tomcat？Tomcat是一个开源的Web应用服务器，不但可以处理静态html页面，还是一个servlet容器。但是Tomcat处理静态HTML的">
+<meta name="keywords" content="Tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码理解Tomcat-架构(一)">
+<meta property="og:url" content="https://a8167270.github.io/blogRecord/2018/04/25/从源码理解Tomcat-架构(一)/index.html">
+<meta property="og:site_name" content="Liu Yun&#39;s Blog">
+<meta property="og:description" content="从源码去理解Tomcat，可以从以下几条线入手：  Tomcat的整体架构、包括Container，Connector等组件。 Tomcat的启动过程、Lifecycle的原理。 Tomcat的服务过程。 Tomcat的类加载，和并发控制。  什么是Tomcat？Tomcat是一个开源的Web应用服务器，不但可以处理静态html页面，还是一个servlet容器。但是Tomcat处理静态HTML的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/axj97rkrxgbrmfbise44hxjj/image_1ciqksj9s13oas4gat71k971mphs.png">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/44ealn0256qlj0x8o72uli3d/Tomcat%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/rh0e6g8u3ojis1crf4t16cj9/image_1ciqo1emmqot9pr6mi1v861aj19.png">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/fk8i00skzngovkf5cc7j75ns/image_1ciqmdgo4t661k2bq671rpt1nbn1p.png">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/fk8i00skzngovkf5cc7j75ns/image_1ciqmdgo4t661k2bq671rpt1nbn1p.png">
+<meta property="og:image" content="http://static.zybuluo.com/a8167270/16cf1oo9yl1uzpp82b5i821n/image_1ciqmedmvgab1dt619do1dsl50b26.png">
+<meta property="og:updated_time" content="2018-07-20T02:26:09.865Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从源码理解Tomcat-架构(一)">
+<meta name="twitter:description" content="从源码去理解Tomcat，可以从以下几条线入手：  Tomcat的整体架构、包括Container，Connector等组件。 Tomcat的启动过程、Lifecycle的原理。 Tomcat的服务过程。 Tomcat的类加载，和并发控制。  什么是Tomcat？Tomcat是一个开源的Web应用服务器，不但可以处理静态html页面，还是一个servlet容器。但是Tomcat处理静态HTML的">
+<meta name="twitter:image" content="http://static.zybuluo.com/a8167270/axj97rkrxgbrmfbise44hxjj/image_1ciqksj9s13oas4gat71k971mphs.png">
+
+    
+    
+    <link rel="icon" href="/blogRecord/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/blogRecord/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blogRecord/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/blogRecord/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/blogRecord/"><img src="/blogRecord/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/blogRecord/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
+				<h2 class="blog-motto">坚持的意义在于坚持的本身！</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/blogRecord/">Home</a></li>
+					
+						<li><a href="/blogRecord/archives">Archives</a></li>
+					
+						<li><a href="/blogRecord/tags">Tags</a></li>
+					
+						<li><a href="/blogRecord/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2018/04/25/从源码理解Tomcat-架构(一)/" title="从源码理解Tomcat-架构(一)" itemprop="url">从源码理解Tomcat-架构(一)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-25T05:46:42.000Z" itemprop="datePublished"> Published 2018-04-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Tomcat？"><span class="toc-number">1.</span> <span class="toc-text">什么是Tomcat？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat有哪些东西？"><span class="toc-number">2.</span> <span class="toc-text">Tomcat有哪些东西？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cantainer"><span class="toc-number">2.1.</span> <span class="toc-text">Cantainer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat如何提供服务？"><span class="toc-number">3.</span> <span class="toc-text">Tomcat如何提供服务？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tomcat运行流程"><span class="toc-number">3.1.</span> <span class="toc-text">Tomcat运行流程</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<!---->
+<p>从源码去理解Tomcat，可以从以下几条线入手：</p>
+<ol>
+<li>Tomcat的整体架构、包括<code>Container</code>，<code>Connector</code>等组件。</li>
+<li>Tomcat的启动过程、<code>Lifecycle</code>的原理。</li>
+<li>Tomcat的服务过程。</li>
+<li>Tomcat的类加载，和并发控制。</li>
+</ol>
+<h2 id="什么是Tomcat？"><a href="#什么是Tomcat？" class="headerlink" title="什么是Tomcat？"></a>什么是Tomcat？</h2><p>Tomcat是一个开源的Web应用服务器，不但可以处理静态html页面，还是一个<code>servlet</code>容器。但是Tomcat处理静态HTML的能力不如Apache服务器。<br><a id="more"></a></p>
+<blockquote>
+<p><code>servlet</code>和<code>servlet</code>容器是一种相互依赖的关系，如果把<code>servlet</code>比作子弹的话，那么<code>servlet</code>容器就类似于枪的存在了，二者是相互依赖的关系。</p>
+</blockquote>
+<p>我们可以把Tomcat简单的理解为处理网络请求、响应的工具，而我们开发的应用，只要遵循<code>servlet</code>规范，就可以使用这个工具处理网络请求。</p>
+<p><code>HTTP</code>协议本身是一种规范，<code>Request</code>和<code>Response</code>都可以理解成为遵循<code>HTTP</code>协议的文本。</p>
+<p><strong>Request：</strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /mix/76.html?name=kelvin&amp;password=123456 HTTP/1.1 </span><br><span class="line">Host: www.fishbay.cn </span><br><span class="line">Upgrade-Insecure-Requests: 1 </span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36 </span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8 Accept-Encoding: gzip, deflate, sdch </span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,en;q=0.6</span><br></pre></td></tr></table></figure></p>
+<p><strong>Response：</strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK </span><br><span class="line">Server: nginx </span><br><span class="line">Date: Mon, 20 Feb 2017 09:13:59 GMT </span><br><span class="line">Content-Type: text/plain;charset=UTF-8 </span><br><span class="line">Vary: Accept-Encoding </span><br><span class="line">Cache-Control: no-store </span><br><span class="line">Pragrma: no-cache </span><br><span class="line">Expires: Thu, 01 Jan 1970 00:00:00 GMT </span><br><span class="line">Cache-Control: no-cache </span><br><span class="line">Content-Encoding: gzip </span><br><span class="line">Transfer-Encoding: chunked </span><br><span class="line">Proxy-Connection: Keep-alive</span><br><span class="line"></span><br><span class="line">&#123;"code":200,"notice":0,"follow":0,"forward":0,"msg":0,"comment":0,"pushMsg":null&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Tomcat的作用就是接收客户端的<code>Request</code>，然后解析<code>Request</code>的信息内容，根据<code>URL</code>找到我们开发的应用，传入参数，最后在将返回的结果，打包成符合<code>HTTP</code>协议的<code>Response</code>，传递到客户端。</p>
+<h2 id="Tomcat有哪些东西？"><a href="#Tomcat有哪些东西？" class="headerlink" title="Tomcat有哪些东西？"></a>Tomcat有哪些东西？</h2><p>Tomcat的结构比较复杂，但是是模块化的设计非常灵活，下面是Tomcat的总体结构图：<br><img src="http://static.zybuluo.com/a8167270/axj97rkrxgbrmfbise44hxjj/image_1ciqksj9s13oas4gat71k971mphs.png" alt="image_1ciqksj9s13oas4gat71k971mphs.png-18.3kB"><br>从架构图中可以看到，每个<code>Server</code>是由多个<code>Service</code>组成，而在每个<code>Service</code>中，是由多个<code>Connector</code>和一个<code>Container</code>来提供服务。</p>
+<p>从类图来看一下:<br><img src="http://static.zybuluo.com/a8167270/44ealn0256qlj0x8o72uli3d/Tomcat%E6%9E%B6%E6%9E%84.png" alt="Tomcat架构.png-42.5kB"><br>实现<code>Container</code>接口的类型共有四种,分别代表四种容器，<code>Engine</code>，<code>Host</code>，<code>Context</code>，<code>Wrapper</code>，从左到右依次为被包含的关系。<code>Service</code>中有多个<code>Connector</code>和一个<code>Engine</code>。</p>
+<h3 id="Cantainer"><a href="#Cantainer" class="headerlink" title="Cantainer"></a>Cantainer</h3><p>Container用于封装和管理Servlet，以及具体处理Request请求。<br><img src="http://static.zybuluo.com/a8167270/rh0e6g8u3ojis1crf4t16cj9/image_1ciqo1emmqot9pr6mi1v861aj19.png" alt="image_1ciqo1emmqot9pr6mi1v861aj19.png-112.2kB"><br>4个子容器的作用分别是：<br>（1）Engine：引擎，用来管理多个站点，一个Service最多只能有一个Engine；<br>（2）Host：代表一个站点，也可以叫虚拟主机，通过配置Host就可以添加站点；<br>（3）Context：代表一个应用程序，对应着平时开发的一套程序，或者一个WEB-INF目录以及下面的web.xml文件；<br>（4）Wrapper：每一Wrapper封装着一个Servlet；</p>
+<p>Tomcat的文件目录对照一下，如下图所示：<br><img src="http://static.zybuluo.com/a8167270/fk8i00skzngovkf5cc7j75ns/image_1ciqmdgo4t661k2bq671rpt1nbn1p.png" alt="1531467985636629418785c.jpg-17.3kB"></p>
+<p>Context和Host的区别是Context表示一个应用，我们的Tomcat中默认的配置下webapps下的每一个文件夹目录都是一个Context，其中ROOT目录中存放着主应用，其他目录存放着子应用，而整个webapps就是一个Host站点。</p>
+<h2 id="Tomcat如何提供服务？"><a href="#Tomcat如何提供服务？" class="headerlink" title="Tomcat如何提供服务？"></a>Tomcat如何提供服务？</h2><p>Tomcat运行示意图：<br><img src="http://static.zybuluo.com/a8167270/fk8i00skzngovkf5cc7j75ns/image_1ciqmdgo4t661k2bq671rpt1nbn1p.png" alt="image_1ciqmdgo4t661k2bq671rpt1nbn1p.png-82.6kB"><br>当一个请求发送到Tomcat之后，首先经过Service然后会交给我们的Connector，Connector用于接收请求并将接收的请求封装为Request和Response来具体处理，Request和Response封装完之后再交由Container进行处理，Container处理完请求之后再返回给Connector，最后在由Connector通过Socket将处理的结果返回给客户端，这样整个请求的就处理完了！</p>
+<p>更具体的结构图如下：<br><img src="http://static.zybuluo.com/a8167270/16cf1oo9yl1uzpp82b5i821n/image_1ciqmedmvgab1dt619do1dsl50b26.png" alt="image_1ciqmedmvgab1dt619do1dsl50b26.png-68.6kB"></p>
+<ol>
+<li>Connector用于接受请求并将请求封装成Request和Response来具体处理；</li>
+<li>Container用于封装和管理Servlet，以及具体处理request请求；</li>
+</ol>
+<h3 id="Tomcat运行流程"><a href="#Tomcat运行流程" class="headerlink" title="Tomcat运行流程"></a>Tomcat运行流程</h3><p>假设来自客户的请求为：<a href="http://localhost:8080/test/index.jsp" target="_blank" rel="noopener">http://localhost:8080/test/index.jsp</a></p>
+<ol>
+<li>请求被发送到本机端口8080，被在那里侦听的Coyote HTTP/1.1 Connector获得</li>
+<li>Connector把该请求交给它所在的Service的Engine来处理，并等待Engine的回应</li>
+<li>Engine获得请求localhost:8080/test/index.jsp，匹配它所有虚拟主机Host</li>
+<li>Engine匹配到名为localhost的Host(即使匹配不到也把请求交给该Host处理，因为该Host被定义为该Engine的默认主机)</li>
+<li>localhost Host获得请求/test/index.jsp，匹配它所拥有的所有Context</li>
+<li>Host匹配到路径为/test的Context(如果匹配不到就把该请求交给路径名为””的Context去处理)</li>
+<li>path=”/test”的Context获得请求/index.jsp，在它的mapping table中寻找对应的servlet</li>
+<li>Context匹配到URL PATTERN为*.jsp的servlet，对应于JspServlet类</li>
+<li>构造HttpServletRequest对象和HttpServletResponse对象，作为参数调用JspServlet的doGet或doPost方法</li>
+<li>Context把执行完了之后的HttpServletResponse对象返回给Host</li>
+<li>Host把HttpServletResponse对象返回给Engine</li>
+<li>Engine把HttpServletResponse对象返回给Connector</li>
+<li>Connector把HttpServletResponse对象返回给客户browser</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Tomcat/">Tomcat</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/Tomcat/">Tomcat</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://a8167270.github.io/blogRecord/2018/04/25/从源码理解Tomcat-架构(一)/" data-title="从源码理解Tomcat-架构(一) | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blogRecord/2018/04/25/从源码理解Tomcat-类加载器/" title="从源码理解Tomcat-类加载器">
+  <strong>上一篇：</strong><br/>
+  <span>
+  从源码理解Tomcat-类加载器</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blogRecord/2017/04/25/struts2源码阅读/"  title="struts2源码阅读">
+ <strong>下一篇：</strong><br/> 
+ <span>struts2源码阅读
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Tomcat？"><span class="toc-number">1.</span> <span class="toc-text">什么是Tomcat？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat有哪些东西？"><span class="toc-number">2.</span> <span class="toc-text">Tomcat有哪些东西？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cantainer"><span class="toc-number">2.1.</span> <span class="toc-text">Cantainer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat如何提供服务？"><span class="toc-number">3.</span> <span class="toc-text">Tomcat如何提供服务？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tomcat运行流程"><span class="toc-number">3.1.</span> <span class="toc-text">Tomcat运行流程</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/blogRecord/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/blogRecord/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://segmentfault.com/u/a8167270" target="_blank" title="Segmentfault">Segmentfault</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 始终相信努力会有结果！ <br/>
+			</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/blogRecord/about" target="_blank" title="Liu Yun">Liu Yun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/blogRecord/js/jquery-2.0.3.min.js"></script>
+<script src="/blogRecord/js/jquery.imagesloaded.min.js"></script>
+<script src="/blogRecord/js/gallery.js"></script>
+<script src="/blogRecord/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/blogRecord/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blogRecord/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1429030d1f3dbf7c167565c77aab3bc8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/blogRecord/img/scrollup.png"/></a>
+	</div>
+	<script src="/blogRecord/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

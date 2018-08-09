@@ -1,0 +1,493 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>从源码理解Tomcat-启动过程(二) | Liu Yun&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liu Yun">
+    
+
+    
+    <meta name="description" content="Tomcat的启动入口main方法是在Bootstrap类里，但具体的执行过程是在Catalina里边，这样做可以使得把启动的入口和具体的管理类进行分开，从而可以方便的创建多种启动的方式。 Catalina是整个Tomcat的管理类，他有三个方法load、start、stop分别用来管理整个服务器的生命周期。  load方法用于加载tomcat/conf目录下的server.xml配置文件，用来">
+<meta name="keywords" content="Tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码理解Tomcat-启动过程(二)">
+<meta property="og:url" content="https://a8167270.github.io/blogRecord/2018/04/25/从源码理解Tomcat-启动过程(一)/index.html">
+<meta property="og:site_name" content="Liu Yun&#39;s Blog">
+<meta property="og:description" content="Tomcat的启动入口main方法是在Bootstrap类里，但具体的执行过程是在Catalina里边，这样做可以使得把启动的入口和具体的管理类进行分开，从而可以方便的创建多种启动的方式。 Catalina是整个Tomcat的管理类，他有三个方法load、start、stop分别用来管理整个服务器的生命周期。  load方法用于加载tomcat/conf目录下的server.xml配置文件，用来">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-20T06:51:28.186Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从源码理解Tomcat-启动过程(二)">
+<meta name="twitter:description" content="Tomcat的启动入口main方法是在Bootstrap类里，但具体的执行过程是在Catalina里边，这样做可以使得把启动的入口和具体的管理类进行分开，从而可以方便的创建多种启动的方式。 Catalina是整个Tomcat的管理类，他有三个方法load、start、stop分别用来管理整个服务器的生命周期。  load方法用于加载tomcat/conf目录下的server.xml配置文件，用来">
+
+    
+    
+    <link rel="icon" href="/blogRecord/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/blogRecord/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blogRecord/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/blogRecord/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/blogRecord/"><img src="/blogRecord/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/blogRecord/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
+				<h2 class="blog-motto">坚持的意义在于坚持的本身！</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/blogRecord/">Home</a></li>
+					
+						<li><a href="/blogRecord/archives">Archives</a></li>
+					
+						<li><a href="/blogRecord/tags">Tags</a></li>
+					
+						<li><a href="/blogRecord/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blogRecord/2018/04/25/从源码理解Tomcat-启动过程(一)/" title="从源码理解Tomcat-启动过程(二)" itemprop="url">从源码理解Tomcat-启动过程(二)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blogRecord/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-25T05:46:42.000Z" itemprop="datePublished"> Published 2018-04-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#BootStrap启动"><span class="toc-number">1.</span> <span class="toc-text">BootStrap启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">2.</span> <span class="toc-text">参考文章</span></a></li></ol>
+		
+		</div>
+		
+		<!---->
+<p>Tomcat的启动入口main方法是在Bootstrap类里，但具体的执行过程是在Catalina里边，这样做可以使得把启动的入口和具体的管理类进行分开，从而可以方便的创建多种启动的方式。</p>
+<p>Catalina是整个Tomcat的管理类，他有三个方法<code>load</code>、<code>start</code>、<code>stop</code>分别用来管理整个服务器的生命周期。</p>
+<ol>
+<li><code>load</code>方法用于加载tomcat/conf目录下的server.xml配置文件，用来创建Server并调用Server的<code>init</code>方法进行初始化操作</li>
+<li><code>start</code>用于启动服务器器</li>
+<li><code>stop</code>用于停止服务器</li>
+</ol>
+<p><code>start</code>和<code>stop</code>方法在内部分别调用Server的<code>start</code>和<code>stop</code>方法，<code>load</code>方法在内部调用了Server的<code>init</code>方法，这三个方法都会按层次分逐层调用相应的方法。</p>
+<a id="more"></a>
+<h2 id="BootStrap启动"><a href="#BootStrap启动" class="headerlink" title="BootStrap启动"></a>BootStrap启动</h2><p>Tomcat的启动是在<code>BootStrap</code>的类函数里面:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//首先判断Bootstrap daemon 是否为空，就是创建一个Bootstrap实例daemon</span></span><br><span class="line">        <span class="keyword">if</span> (daemon == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Don't set daemon until init() has completed</span></span><br><span class="line">            Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                bootstrap.init(); <span class="comment">//初始化ClassLoader，并用ClassLoader创建了一个Catalina实例，并将这个实例赋值给了cataLinaDaemon</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">                handleThrowable(t);</span><br><span class="line">                t.printStackTrace();</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            daemon = bootstrap;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//先判断Bootstrap不为null，直接将Catalina ClassLoader设置到当前线程，用于加载服务器相关类</span></span><br><span class="line">            Thread.currentThread().setContextClassLoader(daemon.catalinaLoader);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String command = <span class="string">"start"</span>; <span class="comment">//指定默认的执行指令是start</span></span><br><span class="line">            <span class="keyword">if</span> (args.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                command = args[args.length - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (command.equals(<span class="string">"startd"</span>)) &#123;</span><br><span class="line">                args[args.length - <span class="number">1</span>] = <span class="string">"start"</span>;</span><br><span class="line">                daemon.load(args); <span class="comment">//BootStrap的load方法，其实是调用Calatina的load方法</span></span><br><span class="line">                daemon.start();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command.equals(<span class="string">"stopd"</span>)) &#123;</span><br><span class="line">                args[args.length - <span class="number">1</span>] = <span class="string">"stop"</span>;</span><br><span class="line">                daemon.stop();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command.equals(<span class="string">"start"</span>)) &#123;</span><br><span class="line">                daemon.setAwait(<span class="keyword">true</span>); <span class="comment">//setWait方法 主要是为了设置Server启动完成后是否进入等待状态的标志，如果为true则进入，否则不进入</span></span><br><span class="line">                daemon.load(args);   <span class="comment">//load方法用于加载配置文件，创建并初始化Server</span></span><br><span class="line">                daemon.start();     <span class="comment">//start方法用于启动服务器</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command.equals(<span class="string">"stop"</span>)) &#123;</span><br><span class="line">                daemon.stopServer(args);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (command.equals(<span class="string">"configtest"</span>)) &#123;</span><br><span class="line">                daemon.load(args);</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> == daemon.getServer()) &#123;</span><br><span class="line">                    System.exit(<span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                System.exit(<span class="number">0</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                log.warn(<span class="string">"Bootstrap: command \""</span> + command + <span class="string">"\" does not exist."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            <span class="comment">// Unwrap the Exception for clearer error reporting</span></span><br><span class="line">            <span class="keyword">if</span> (t <span class="keyword">instanceof</span> InvocationTargetException &amp;&amp;</span><br><span class="line">                    t.getCause() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                t = t.getCause();</span><br><span class="line">            &#125;</span><br><span class="line">            handleThrowable(t);</span><br><span class="line">            t.printStackTrace();</span><br><span class="line">            System.exit(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/xlgen157387/article/details/53521928" target="_blank" rel="noopener">Tomcat服务器顶层结构和启动过程</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blogRecord/categories/Tomcat/">Tomcat</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blogRecord/tags/Tomcat/">Tomcat</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://a8167270.github.io/blogRecord/2018/04/25/从源码理解Tomcat-启动过程(一)/" data-title="从源码理解Tomcat-启动过程(二) | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/blogRecord/2018/04/25/从源码理解Tomcat-类加载器/"  title="从源码理解Tomcat-类加载器">
+ <strong>下一篇：</strong><br/> 
+ <span>从源码理解Tomcat-类加载器
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#BootStrap启动"><span class="toc-number">1.</span> <span class="toc-text">BootStrap启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">2.</span> <span class="toc-text">参考文章</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/blogRecord/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blogRecord/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/blogRecord/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blogRecord/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://segmentfault.com/u/a8167270" target="_blank" title="Segmentfault">Segmentfault</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 始终相信努力会有结果！ <br/>
+			</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/blogRecord/about" target="_blank" title="Liu Yun">Liu Yun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/blogRecord/js/jquery-2.0.3.min.js"></script>
+<script src="/blogRecord/js/jquery.imagesloaded.min.js"></script>
+<script src="/blogRecord/js/gallery.js"></script>
+<script src="/blogRecord/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/blogRecord/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blogRecord/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1429030d1f3dbf7c167565c77aab3bc8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/blogRecord/img/scrollup.png"/></a>
+	</div>
+	<script src="/blogRecord/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
