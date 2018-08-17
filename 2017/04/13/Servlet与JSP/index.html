@@ -15,27 +15,27 @@
 <meta name="keywords" content="JavaWeb">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Servlet">
-<meta property="og:url" content="https://a8167270.github.io/2017/04/13/Servlet与JSP/index.html">
+<meta property="og:url" content="https://a8167270.github.io/blog/2017/04/13/Servlet与JSP/index.html">
 <meta property="og:site_name" content="Liu Yun&#39;s Blog">
 <meta property="og:description" content="在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。 Servlet简介Servlet的生命周期服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://a8167270.github.io/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
-<meta property="og:image" content="https://a8167270.github.io/2017/04/13/Servlet与JSP/Servlet与JSP/filter.png">
+<meta property="og:image" content="https://a8167270.github.io/blog/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
+<meta property="og:image" content="https://a8167270.github.io/blog/2017/04/13/Servlet与JSP/Servlet与JSP/filter.png">
 <meta property="og:updated_time" content="2018-07-19T09:45:27.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Servlet">
 <meta name="twitter:description" content="在某种程度上来讲，可以将servlet看作是含有HTML的Java程序；将JSP看作是含有Java代码的HTML页面。JSP文档可以理解成是编写servlet的另一种形式，JSP页面会被翻译成servelt，而servlet会被编译。在整个请求期间运行的就是servlet。 Servlet简介Servlet的生命周期服务器只对每一个servlet创建单一实例，每个用户请求会创建新的线程，将用户请求">
-<meta name="twitter:image" content="https://a8167270.github.io/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
+<meta name="twitter:image" content="https://a8167270.github.io/blog/2017/04/13/Servlet与JSP/Servlet与JSP/ServletLifeCycle.jpg">
 
     
     
-    <link rel="icon" href="/img/favicon.ico">
+    <link rel="icon" href="/blog/img/favicon.ico">
     
     
-    <link rel="apple-touch-icon" href="/img/jacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon" href="/blog/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blog/img/jacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/blog/css/style.css">
 </head>
 
   <body>
@@ -44,11 +44,11 @@
 <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
+				<a href="/blog/"><img src="/blog/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
+				<h1 class="site-name"><a href="/blog/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
 				<h2 class="blog-motto">坚持的意义在于坚持的本身！</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -57,13 +57,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/blog/">Home</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/blog/archives">Archives</a></li>
 					
-						<li><a href="/tags">Tags</a></li>
+						<li><a href="/blog/tags">Tags</a></li>
 					
-						<li><a href="/about">About</a></li>
+						<li><a href="/blog/about">About</a></li>
 					
 					<li>
  					
@@ -84,11 +84,11 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/04/13/Servlet与JSP/" title="Servlet" itemprop="url">Servlet</a>
+      <a href="/blog/2017/04/13/Servlet与JSP/" title="Servlet" itemprop="url">Servlet</a>
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		<a href="/blog/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
 		
   <p class="article-time">
     <time datetime="2017-04-13T07:33:26.000Z" itemprop="datePublished"> Published 2017-04-13</time>
@@ -220,13 +220,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/blog/categories/Java/">Java</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/JavaWeb/">JavaWeb</a>
+  <span></span> <a href="/blog/tags/JavaWeb/">JavaWeb</a>
   </div>
 
 </div>
@@ -235,7 +235,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="https://a8167270.github.io/2017/04/13/Servlet与JSP/" data-title="Servlet | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  <div data-url="https://a8167270.github.io/blog/2017/04/13/Servlet与JSP/" data-title="Servlet | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -249,7 +249,7 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2017/04/14/Http协议/" title="Http协议">
+ <a href="/blog/2017/04/14/Http协议/" title="Http协议">
   <strong>上一篇：</strong><br/>
   <span>
   Http协议</span>
@@ -258,7 +258,7 @@
 
 
 <div class="next">
-<a href="/2017/04/13/我对代码的理解/"  title="我对代码的理解">
+<a href="/blog/2017/04/13/我对代码的理解/"  title="我对代码的理解">
  <strong>下一篇：</strong><br/> 
  <span>我对代码的理解
 </span>
@@ -294,19 +294,19 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+			<li><a href="/blog/categories/Java/" title="Java">Java<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+			<li><a href="/blog/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+			<li><a href="/blog/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+			<li><a href="/blog/categories/网络/" title="网络">网络<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -319,27 +319,27 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+				<li><a href="/blog/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+				<li><a href="/blog/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+				<li><a href="/blog/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+				<li><a href="/blog/tags/协议/" title="协议">协议<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+				<li><a href="/blog/tags/代码/" title="代码">代码<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+				<li><a href="/blog/tags/生活/" title="生活">生活<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -393,16 +393,16 @@
 		<p class="copyright">
 		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
 		
-		<a href="/about" target="_blank" title="Liu Yun">Liu Yun</a>
+		<a href="/blog/about" target="_blank" title="Liu Yun">Liu Yun</a>
 		
 		
 		</p>
 </div>
 </footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+    <script src="/blog/js/jquery-2.0.3.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+<script src="/blog/js/jquery.qrcode-0.12.0.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){ 
@@ -537,8 +537,8 @@ $(document).ready(function(){
 
 
 
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){ 
   $('.article-content').each(function(i){
@@ -581,9 +581,9 @@ var _hmt = _hmt || [];
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/blog/img/scrollup.png"/></a>
 	</div>
-	<script src="/js/totop.js"></script>
+	<script src="/blog/js/totop.js"></script>
 
 <!-- Totop End -->
 
