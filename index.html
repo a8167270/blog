@@ -78,6 +78,120 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/blog/2018/04/25/从源码理解Tomcat-类加载器/" title="从源码理解Tomcat-类加载器" itemprop="url">从源码理解Tomcat-类加载器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blog/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-25T05:46:42.000Z" itemprop="datePublished"> Published 2018-04-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>类加载器（ClassLoader），顾名思义，即加载类的东西。在我们使用一个类之前，JVM需要先将该类的字节码文件（.class文件）从磁盘、网络或其他来源加载到内存中，并对字节码进行解析生成对应的Class对象，这就是类加载器的功能。我们可以利用类加载器，实现类的动态加载。</p>
+<h2 id="Java类加载机制"><a href="#Java类加载机制" class="headerlink" title="Java类加载机制"></a>Java类加载机制</h2><p>Java 提供三种类型的系统类加载器：</p>
+<ol>
+<li>启动类加载器（Bootstrap ClassLoader）：由C++语言实现，属于JVM的一部分，其作用是加载 ＜JAVA_HOME＞\lib 目录中的文件，或者被-Xbootclasspath参数所指定的路径中的文件，并且该类加载器只加载特定名称的文件（如 rt.jar），而不是该目录下所有的文件。启动类加载器无法被Java程序直接引用。</li>
+<li>扩展类加载器（Extension ClassLoader）：由sun.misc.Launcher.ExtClassLoader实现，它负责加载＜JAVA_HOME＞\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</li>
+<li>应用程序类加载器（Application ClassLoader）：也称系统类加载器，由sun.misc.Launcher.AppClassLoader实现。负责加载用户类路径（Class Path）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</li>
+</ol>
+<p><img src="http://osv6ivbbn.bkt.clouddn.com/18-7-20/76261208.jpg" alt="Java类加载机制"></p>
+<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p>为了保证一个类只由一个类加载器加载，所以引入了双亲委派模型。</p>
+<p>什么是双亲委派模型？ 每一个加载器都要通过组合的方式保存一个加载器的实例作为父加载器。当使用当前类加载器加载类时，当前类加载器不会自己加载，会先交给父加载器加载，父加载器加载时会重复这个过程，直到到达顶端的类加载器后。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String var1, <span class="keyword">boolean</span> var2) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="keyword">this</span>.getClassLoadingLock(var1)) &#123;</span><br><span class="line">        <span class="comment">//首先， 检查请求的类是否已经被加载过了  </span></span><br><span class="line">        Class var4 = <span class="keyword">this</span>.findLoadedClass(var1);</span><br><span class="line">        <span class="keyword">if</span>(var4 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> var5 = System.nanoTime();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">this</span>.parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    var4 = <span class="keyword">this</span>.parent.loadClass(var1, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    var4 = <span class="keyword">this</span>.findBootstrapClassOrNull(var1);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException var10) &#123;</span><br><span class="line">                <span class="comment">//如果父类加载器抛出ClassNotFoundException </span></span><br><span class="line">                <span class="comment">//说明父类加载器无法完成加载请求  </span></span><br><span class="line">                ;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(var4 == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">long</span> var7 = System.nanoTime();</span><br><span class="line">                <span class="comment">//在父类加载器无法加载的时候  </span></span><br><span class="line">                <span class="comment">//再调用本身的findClass方法来进行类加载  </span></span><br><span class="line">                var4 = <span class="keyword">this</span>.findClass(var1);</span><br><span class="line">                PerfCounter.getParentDelegationTime().addTime(var7 - var5);</span><br><span class="line">                PerfCounter.getFindClassTime().addElapsedTimeFrom(var7);</span><br><span class="line">                PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(var2) &#123;</span><br><span class="line">            <span class="keyword">this</span>.resolveClass(var4);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var4;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从源码可以看出，ExtClassLoader 和 AppClassLoader都继承自 ClassLoader 类，ClassLoader 类中通过 loadClass 方法来实现双亲委派机制。整个类的加载过程可分为如下三步：</p>
+<p>1、查找对应的类是否已经加载。<br>2、若未加载，则判断当前类加载器的父加载器是否为空，不为空则委托给父类去加载，否则调用启动类加载器加载（findBootstrapClassOrNull 再往下会调用一个 native 方法）。<br>3、若第二步加载失败，则调用当前类加载器加载。</p>
+<h2 id="Tomat类加载器"><a href="#Tomat类加载器" class="headerlink" title="Tomat类加载器"></a>Tomat类加载器</h2><p>Tomcat基本遵守了JVM的委派模型，但也在自定义的类加载器中做了细微的调整，以适应Tomcat自身的要求。</p>
+<p>Tomcat作为一个服务器，在它上面可以部署多个应用。默认情况下是使用应用加载器加载类的，但往往部署的应用都会有多个jar依赖，所以第一点为了解决依赖问题，必须保证每个应用的类库独立。 为什么要保证每个应用的类库相互独立呢？ 打个比方，我们都知道连接数据库需要数据库驱动，而数据库驱动的版本要与连接的数据库相对应，否则无法获取连接。 那假设部署在tomcat上的两个应用依赖的数据库驱动版本有很大差异，这样直接使用java的系统类加载器会导致这两个应用有一个无法启动。</p>
+<p>a)、要保证部署在tomcat上的每个应用依赖的类库相互独立，不受影响。</p>
+<p>b)、由于tomcat是采用java语言编写的，它自身也有类库依赖，为了安全考虑，tomcat使用的类库要与部署的应用的类库相互独立。</p>
+<p>c)、有些类库tomcat与部署的应用可以共享，比如说servlet-api，使用maven编写web程序时，servlet-api的范围是provided，表示打包时不打包这个依赖，因为我们都知道服务器已经有这个依赖了。</p>
+<p>d)、部署的应用之间的类库可以共享。这听起来好像与第一点相互矛盾，但其实这很合理，类被类加载器加载到虚拟机后，会生成代表该类的class对象存放在永久代区域，这时候如果有大量的应用使用spring来管理，如果spring类库不能共享，那每个应用的spring类库都会被加载一次，将会是很大的资源浪费。</p>
+<p>由于存在上述问题，tomcat实现了自己的类加载器，不仅仅是tomcat，所有的服务器基本都有或多或少上述所说的问题。</p>
+<p><img src="http://osv6ivbbn.bkt.clouddn.com/18-7-20/72467248.jpg" alt="tomat类加载"></p>
+<p>每个 Web 应用都有一个对应的类加载器实例。该类加载器也使用代理模式，所不同的是它是首先尝试去加载某个类，如果找不到再代理给父类加载器。这与一般类加载器的顺序是相反的。</p>
+<p>如上图所示，Tomcat 在初始化时会创建如下这些类加载器： </p>
+<p>1 Bootstrap 引导类加载器 + Extension类加载器</p>
+<p>先尝试在Bootstrap（位于jre/lib/rt.jar下）和Extension（位于jre/lib/ext下）中进行类型加载。</p>
+<p>2 System 系统类加载器(仅仅tomcat使用)</p>
+<p>加载tomcat启动的类，比如CATALINA_HOME/bin/bootstrap.jar，通常在catalina.sh中指定。位于CATALINA_HOME/bin下。</p>
+<p>3 Common 通用类加载器(tomcat，web程序都可以使用)</p>
+<p>加载tomcat使用以及应用通用的一些类，位于CATALINA_HOME/lib下，比如servlet-api.jar</p>
+<p>4 webapp 应用类加载器(仅仅web程序都可以使用)</p>
+<p>每个应用在部署后，都会创建一个唯一的类加载器。该类加载器会加载位于WEB-INF/lib下的jar文件中的class和WEB-INF/classes下的class文件。</p>
+<p>当应用需要到某个类时，则会按照下面的顺序进行类加载<br>1 使用bootstrap引导类加载器加载（e.g. JRE中的Java基础包）</p>
+<p>2 使用system系统类加载器加载 (e.g. CATALINA_HOME/bin/bootstrap.jar)</p>
+<p>3 使用应用类加载器在WEB-INF/classes中加载</p>
+<p>4 使用应用类加载器在WEB-INF/lib中加载 </p>
+<p>5 使用common类加载器在CATALINA_HOME/lib中加载<br>(e.g. CATALINA_HOME/lib/下的)</p>
+<h2 id="Tomcat源码"><a href="#Tomcat源码" class="headerlink" title="Tomcat源码"></a>Tomcat源码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initClassLoaders</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        commonLoader = createClassLoader(<span class="string">"common"</span>, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">if</span>( commonLoader == <span class="keyword">null</span> ) &#123;</span><br><span class="line">            <span class="comment">// no config file, default to this loader - we might be in a 'single' env.</span></span><br><span class="line">            commonLoader=<span class="keyword">this</span>.getClass().getClassLoader();</span><br><span class="line">        &#125;</span><br><span class="line">        catalinaLoader = createClassLoader(<span class="string">"server"</span>, commonLoader);</span><br><span class="line">        sharedLoader = createClassLoader(<span class="string">"shared"</span>, commonLoader);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        handleThrowable(t);</span><br><span class="line">        log.error(<span class="string">"Class loader creation threw exception"</span>, t);</span><br><span class="line">        System.exit(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Tomcat初始化过程中，会创建三个ClassLoader，CommClassLoader，Catalina ClassLoader，SharedClassLoader，正好对应前面介绍的三个基础类加载器。</p>
+<p>在createClassLoader方法中可以看到这三个基础类加载器所加载的资源刚好对应conf/catalina.properties中的common.loader，server.loader，shared.loader：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ClassLoader <span class="title">createClassLoader</span><span class="params">(String name, ClassLoader parent)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">		String value = CatalinaProperties.getProperty(name + <span class="string">".loader"</span>);</span><br><span class="line">		<span class="keyword">if</span> ((value == <span class="keyword">null</span>) || (value.equals(<span class="string">""</span>)))</span><br><span class="line">			<span class="keyword">return</span> parent;</span><br><span class="line"></span><br><span class="line">		value = replace(value);</span><br><span class="line"></span><br><span class="line">		List&lt;Repository&gt; repositories = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">		String[] repositoryPaths = getPaths(value);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (String repository : repositoryPaths) &#123;</span><br><span class="line">			<span class="comment">// Check for a JAR URL repository</span></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="meta">@SuppressWarnings</span>(<span class="string">"unused"</span>)</span><br><span class="line">				URL url = <span class="keyword">new</span> URL(repository);</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.URL));</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">				<span class="comment">// Ignore</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Local repository</span></span><br><span class="line">			<span class="keyword">if</span> (repository.endsWith(<span class="string">"*.jar"</span>)) &#123;</span><br><span class="line">				repository = repository.substring(<span class="number">0</span>, repository.length() - <span class="string">"*.jar"</span>.length());</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.GLOB));</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (repository.endsWith(<span class="string">".jar"</span>)) &#123;</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.JAR));</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.DIR));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> ClassLoaderFactory.createClassLoader(repositories, parent);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 在Tomcat存在common、cataina、shared三个公共的classloader,默认情况下，这三个classloader其实是同一个，都是common classloader，而针对每个webapp，也就是context（对应代码中的StandardContext类），都有自己的WebappClassLoader实例来加载每个应用自己的类，该类加载实例的parent即是Shared ClassLoader。</p>
+<p>Web应用类加载器默认的加载顺序是：</p>
+<ol>
+<li>先从缓存中加载；</li>
+<li>如果没有，则从JVM的Bootstrap类加载器加载；</li>
+<li>如果没有，则从当前类加载器加载（按照WEB-INF/classes、WEB-INF/lib的顺序）；</li>
+<li>如果没有，则从父类加载器加载，由于父类加载器采用默认的委派模式，所以加载顺序是AppClassLoader、Common、Shared。</li>
+</ol>
+<p>tomcat提供了delegate属性用于控制是否启用java委派模式，默认false（不启用），当设置为true时，tomcat将使用java的默认委派模式，这时加载顺序如下：</p>
+<ol>
+<li>先从缓存中加载；</li>
+<li>如果没有，则从JVM的Bootstrap类加载器加载；</li>
+<li>如果没有，则从父类加载器加载，加载顺序是AppClassLoader、Common、Shared。</li>
+<li>如果没有，则从当前类加载器加载（按照WEB-INF/classes、WEB-INF/lib的顺序）；</li>
+</ol>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/w1992wishes/article/details/79274417" target="_blank" rel="noopener">1、Tomcat源码分析 – Tomcat类加载器</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blog/categories/Tomcat/">Tomcat</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blog/tags/Tomcat/">Tomcat</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/blog/2018/04/25/从源码理解Tomcat-启动过程(一)/" title="从源码理解Tomcat-启动过程(二)" itemprop="url">从源码理解Tomcat-启动过程(二)</a>
   </h1>
   <p class="article-author">By
@@ -216,78 +330,27 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2018/04/25/从源码理解Tomcat-类加载器/" title="从源码理解Tomcat-类加载器" itemprop="url">从源码理解Tomcat-类加载器</a>
+      <a href="/blog/2017/05/14/通信问题汇总/" title="通信问题汇总" itemprop="url">通信问题汇总</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/blog/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
 		
   <p class="article-time">
-    <time datetime="2018-04-25T05:46:42.000Z" itemprop="datePublished"> Published 2018-04-25</time>
+    <time datetime="2017-05-14T02:43:19.000Z" itemprop="datePublished"> Published 2017-05-14</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>类加载器（ClassLoader），顾名思义，即加载类的东西。在我们使用一个类之前，JVM需要先将该类的字节码文件（.class文件）从磁盘、网络或其他来源加载到内存中，并对字节码进行解析生成对应的Class对象，这就是类加载器的功能。我们可以利用类加载器，实现类的动态加载。</p>
-<h2 id="Java类加载机制"><a href="#Java类加载机制" class="headerlink" title="Java类加载机制"></a>Java类加载机制</h2><p>Java 提供三种类型的系统类加载器：</p>
-<ol>
-<li>启动类加载器（Bootstrap ClassLoader）：由C++语言实现，属于JVM的一部分，其作用是加载 ＜JAVA_HOME＞\lib 目录中的文件，或者被-Xbootclasspath参数所指定的路径中的文件，并且该类加载器只加载特定名称的文件（如 rt.jar），而不是该目录下所有的文件。启动类加载器无法被Java程序直接引用。</li>
-<li>扩展类加载器（Extension ClassLoader）：由sun.misc.Launcher.ExtClassLoader实现，它负责加载＜JAVA_HOME＞\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</li>
-<li>应用程序类加载器（Application ClassLoader）：也称系统类加载器，由sun.misc.Launcher.AppClassLoader实现。负责加载用户类路径（Class Path）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</li>
-</ol>
-<p><img src="http://osv6ivbbn.bkt.clouddn.com/18-7-20/76261208.jpg" alt="Java类加载机制"></p>
-<h2 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h2><p>为了保证一个类只由一个类加载器加载，所以引入了双亲委派模型。</p>
-<p>什么是双亲委派模型？ 每一个加载器都要通过组合的方式保存一个加载器的实例作为父加载器。当使用当前类加载器加载类时，当前类加载器不会自己加载，会先交给父加载器加载，父加载器加载时会重复这个过程，直到到达顶端的类加载器后。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String var1, <span class="keyword">boolean</span> var2) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="keyword">this</span>.getClassLoadingLock(var1)) &#123;</span><br><span class="line">        <span class="comment">//首先， 检查请求的类是否已经被加载过了  </span></span><br><span class="line">        Class var4 = <span class="keyword">this</span>.findLoadedClass(var1);</span><br><span class="line">        <span class="keyword">if</span>(var4 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> var5 = System.nanoTime();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">this</span>.parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    var4 = <span class="keyword">this</span>.parent.loadClass(var1, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    var4 = <span class="keyword">this</span>.findBootstrapClassOrNull(var1);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException var10) &#123;</span><br><span class="line">                <span class="comment">//如果父类加载器抛出ClassNotFoundException </span></span><br><span class="line">                <span class="comment">//说明父类加载器无法完成加载请求  </span></span><br><span class="line">                ;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(var4 == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">long</span> var7 = System.nanoTime();</span><br><span class="line">                <span class="comment">//在父类加载器无法加载的时候  </span></span><br><span class="line">                <span class="comment">//再调用本身的findClass方法来进行类加载  </span></span><br><span class="line">                var4 = <span class="keyword">this</span>.findClass(var1);</span><br><span class="line">                PerfCounter.getParentDelegationTime().addTime(var7 - var5);</span><br><span class="line">                PerfCounter.getFindClassTime().addElapsedTimeFrom(var7);</span><br><span class="line">                PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(var2) &#123;</span><br><span class="line">            <span class="keyword">this</span>.resolveClass(var4);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var4;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从源码可以看出，ExtClassLoader 和 AppClassLoader都继承自 ClassLoader 类，ClassLoader 类中通过 loadClass 方法来实现双亲委派机制。整个类的加载过程可分为如下三步：</p>
-<p>1、查找对应的类是否已经加载。<br>2、若未加载，则判断当前类加载器的父加载器是否为空，不为空则委托给父类去加载，否则调用启动类加载器加载（findBootstrapClassOrNull 再往下会调用一个 native 方法）。<br>3、若第二步加载失败，则调用当前类加载器加载。</p>
-<h2 id="Tomat类加载器"><a href="#Tomat类加载器" class="headerlink" title="Tomat类加载器"></a>Tomat类加载器</h2><p>Tomcat基本遵守了JVM的委派模型，但也在自定义的类加载器中做了细微的调整，以适应Tomcat自身的要求。</p>
-<p>Tomcat作为一个服务器，在它上面可以部署多个应用。默认情况下是使用应用加载器加载类的，但往往部署的应用都会有多个jar依赖，所以第一点为了解决依赖问题，必须保证每个应用的类库独立。 为什么要保证每个应用的类库相互独立呢？ 打个比方，我们都知道连接数据库需要数据库驱动，而数据库驱动的版本要与连接的数据库相对应，否则无法获取连接。 那假设部署在tomcat上的两个应用依赖的数据库驱动版本有很大差异，这样直接使用java的系统类加载器会导致这两个应用有一个无法启动。</p>
-<p>a)、要保证部署在tomcat上的每个应用依赖的类库相互独立，不受影响。</p>
-<p>b)、由于tomcat是采用java语言编写的，它自身也有类库依赖，为了安全考虑，tomcat使用的类库要与部署的应用的类库相互独立。</p>
-<p>c)、有些类库tomcat与部署的应用可以共享，比如说servlet-api，使用maven编写web程序时，servlet-api的范围是provided，表示打包时不打包这个依赖，因为我们都知道服务器已经有这个依赖了。</p>
-<p>d)、部署的应用之间的类库可以共享。这听起来好像与第一点相互矛盾，但其实这很合理，类被类加载器加载到虚拟机后，会生成代表该类的class对象存放在永久代区域，这时候如果有大量的应用使用spring来管理，如果spring类库不能共享，那每个应用的spring类库都会被加载一次，将会是很大的资源浪费。</p>
-<p>由于存在上述问题，tomcat实现了自己的类加载器，不仅仅是tomcat，所有的服务器基本都有或多或少上述所说的问题。</p>
-<p><img src="http://osv6ivbbn.bkt.clouddn.com/18-7-20/72467248.jpg" alt="tomat类加载"></p>
-<p>每个 Web 应用都有一个对应的类加载器实例。该类加载器也使用代理模式，所不同的是它是首先尝试去加载某个类，如果找不到再代理给父类加载器。这与一般类加载器的顺序是相反的。</p>
-<p>如上图所示，Tomcat 在初始化时会创建如下这些类加载器： </p>
-<p>1 Bootstrap 引导类加载器 + Extension类加载器</p>
-<p>先尝试在Bootstrap（位于jre/lib/rt.jar下）和Extension（位于jre/lib/ext下）中进行类型加载。</p>
-<p>2 System 系统类加载器(仅仅tomcat使用)</p>
-<p>加载tomcat启动的类，比如CATALINA_HOME/bin/bootstrap.jar，通常在catalina.sh中指定。位于CATALINA_HOME/bin下。</p>
-<p>3 Common 通用类加载器(tomcat，web程序都可以使用)</p>
-<p>加载tomcat使用以及应用通用的一些类，位于CATALINA_HOME/lib下，比如servlet-api.jar</p>
-<p>4 webapp 应用类加载器(仅仅web程序都可以使用)</p>
-<p>每个应用在部署后，都会创建一个唯一的类加载器。该类加载器会加载位于WEB-INF/lib下的jar文件中的class和WEB-INF/classes下的class文件。</p>
-<p>当应用需要到某个类时，则会按照下面的顺序进行类加载<br>1 使用bootstrap引导类加载器加载（e.g. JRE中的Java基础包）</p>
-<p>2 使用system系统类加载器加载 (e.g. CATALINA_HOME/bin/bootstrap.jar)</p>
-<p>3 使用应用类加载器在WEB-INF/classes中加载</p>
-<p>4 使用应用类加载器在WEB-INF/lib中加载 </p>
-<p>5 使用common类加载器在CATALINA_HOME/lib中加载<br>(e.g. CATALINA_HOME/lib/下的)</p>
-<h2 id="Tomcat源码"><a href="#Tomcat源码" class="headerlink" title="Tomcat源码"></a>Tomcat源码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initClassLoaders</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        commonLoader = createClassLoader(<span class="string">"common"</span>, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">if</span>( commonLoader == <span class="keyword">null</span> ) &#123;</span><br><span class="line">            <span class="comment">// no config file, default to this loader - we might be in a 'single' env.</span></span><br><span class="line">            commonLoader=<span class="keyword">this</span>.getClass().getClassLoader();</span><br><span class="line">        &#125;</span><br><span class="line">        catalinaLoader = createClassLoader(<span class="string">"server"</span>, commonLoader);</span><br><span class="line">        sharedLoader = createClassLoader(<span class="string">"shared"</span>, commonLoader);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        handleThrowable(t);</span><br><span class="line">        log.error(<span class="string">"Class loader creation threw exception"</span>, t);</span><br><span class="line">        System.exit(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在Tomcat初始化过程中，会创建三个ClassLoader，CommClassLoader，Catalina ClassLoader，SharedClassLoader，正好对应前面介绍的三个基础类加载器。</p>
-<p>在createClassLoader方法中可以看到这三个基础类加载器所加载的资源刚好对应conf/catalina.properties中的common.loader，server.loader，shared.loader：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ClassLoader <span class="title">createClassLoader</span><span class="params">(String name, ClassLoader parent)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">		String value = CatalinaProperties.getProperty(name + <span class="string">".loader"</span>);</span><br><span class="line">		<span class="keyword">if</span> ((value == <span class="keyword">null</span>) || (value.equals(<span class="string">""</span>)))</span><br><span class="line">			<span class="keyword">return</span> parent;</span><br><span class="line"></span><br><span class="line">		value = replace(value);</span><br><span class="line"></span><br><span class="line">		List&lt;Repository&gt; repositories = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">		String[] repositoryPaths = getPaths(value);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (String repository : repositoryPaths) &#123;</span><br><span class="line">			<span class="comment">// Check for a JAR URL repository</span></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="meta">@SuppressWarnings</span>(<span class="string">"unused"</span>)</span><br><span class="line">				URL url = <span class="keyword">new</span> URL(repository);</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.URL));</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">				<span class="comment">// Ignore</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Local repository</span></span><br><span class="line">			<span class="keyword">if</span> (repository.endsWith(<span class="string">"*.jar"</span>)) &#123;</span><br><span class="line">				repository = repository.substring(<span class="number">0</span>, repository.length() - <span class="string">"*.jar"</span>.length());</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.GLOB));</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (repository.endsWith(<span class="string">".jar"</span>)) &#123;</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.JAR));</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				repositories.add(<span class="keyword">new</span> Repository(repository, RepositoryType.DIR));</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> ClassLoaderFactory.createClassLoader(repositories, parent);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
-<p> 在Tomcat存在common、cataina、shared三个公共的classloader,默认情况下，这三个classloader其实是同一个，都是common classloader，而针对每个webapp，也就是context（对应代码中的StandardContext类），都有自己的WebappClassLoader实例来加载每个应用自己的类，该类加载实例的parent即是Shared ClassLoader。</p>
-<p>Web应用类加载器默认的加载顺序是：</p>
-<ol>
-<li>先从缓存中加载；</li>
-<li>如果没有，则从JVM的Bootstrap类加载器加载；</li>
-<li>如果没有，则从当前类加载器加载（按照WEB-INF/classes、WEB-INF/lib的顺序）；</li>
-<li>如果没有，则从父类加载器加载，由于父类加载器采用默认的委派模式，所以加载顺序是AppClassLoader、Common、Shared。</li>
-</ol>
-<p>tomcat提供了delegate属性用于控制是否启用java委派模式，默认false（不启用），当设置为true时，tomcat将使用java的默认委派模式，这时加载顺序如下：</p>
-<ol>
-<li>先从缓存中加载；</li>
-<li>如果没有，则从JVM的Bootstrap类加载器加载；</li>
-<li>如果没有，则从父类加载器加载，加载顺序是AppClassLoader、Common、Shared。</li>
-<li>如果没有，则从当前类加载器加载（按照WEB-INF/classes、WEB-INF/lib的顺序）；</li>
-</ol>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/w1992wishes/article/details/79274417" target="_blank" rel="noopener">1、Tomcat源码分析 – Tomcat类加载器</a></p>
-
+        <h3 id="TCP和OSI模型"><a href="#TCP和OSI模型" class="headerlink" title="TCP和OSI模型"></a>TCP和OSI模型</h3><h4 id="OSI七层模型"><a href="#OSI七层模型" class="headerlink" title="OSI七层模型"></a>OSI七层模型</h4><p><img src="https://camo.githubusercontent.com/bd889453dde179bf0fa69d835456f7b89e71547f/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350312e6a7067" alt="img"></p>
+<p>对应的协议为</p>
+<p><img src="https://camo.githubusercontent.com/555dfd3ffcf6c3c86cc3598ad2baaedbc93a4daa/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350322e676966" alt="img"></p>
         
         
         <p class="article-more-link">
+          
+            <a href="/blog/2017/05/14/通信问题汇总/#more">更多</a>
           
        </p>
     </div>
@@ -296,13 +359,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/blog/categories/Tomcat/">Tomcat</a>
+  <a class="article-category-link" href="/blog/categories/网络/">网络</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/blog/tags/Tomcat/">Tomcat</a>
+  <span></span> <a href="/blog/tags/协议/">协议</a>
   </div>
 
 </div>
@@ -752,7 +815,7 @@
 		  
 		
 		  
-			<li><a href="/blog/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+			<li><a href="/blog/categories/网络/" title="网络">网络<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -769,6 +832,10 @@
 			
 		
 			
+				<li><a href="/blog/tags/协议/" title="协议">协议<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/blog/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
 			
 		
@@ -777,15 +844,11 @@
 			
 		
 			
-				<li><a href="/blog/tags/协议/" title="协议">协议<sup>1</sup></a></li>
+				<li><a href="/blog/tags/生活/" title="生活">生活<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/blog/tags/代码/" title="代码">代码<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/blog/tags/生活/" title="生活">生活<sup>1</sup></a></li>
 			
 		
 		</ul>

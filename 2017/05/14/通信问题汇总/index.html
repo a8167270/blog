@@ -1,0 +1,555 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>通信问题汇总 | Liu Yun&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liu Yun">
+    
+
+    
+    <meta name="description" content="TCP和OSI模型OSI七层模型 对应的协议为">
+<meta name="keywords" content="协议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通信问题汇总">
+<meta property="og:url" content="https://a8167270.github.io/blog/2017/05/14/通信问题汇总/index.html">
+<meta property="og:site_name" content="Liu Yun&#39;s Blog">
+<meta property="og:description" content="TCP和OSI模型OSI七层模型 对应的协议为">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://camo.githubusercontent.com/bd889453dde179bf0fa69d835456f7b89e71547f/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350312e6a7067">
+<meta property="og:image" content="https://camo.githubusercontent.com/555dfd3ffcf6c3c86cc3598ad2baaedbc93a4daa/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350322e676966">
+<meta property="og:image" content="http://osv6ivbbn.bkt.clouddn.com/18-8-21/63976077.jpg">
+<meta property="og:image" content="http://osv6ivbbn.bkt.clouddn.com/18-8-21/93951637.jpg">
+<meta property="og:image" content="http://osv6ivbbn.bkt.clouddn.com/18-8-21/39499078.jpg">
+<meta property="og:updated_time" content="2018-08-21T12:11:30.035Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通信问题汇总">
+<meta name="twitter:description" content="TCP和OSI模型OSI七层模型 对应的协议为">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/bd889453dde179bf0fa69d835456f7b89e71547f/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350312e6a7067">
+
+    
+    
+    <link rel="icon" href="/blog/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/blog/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/blog/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/blog/"><img src="/blog/img/logo.png" alt="Liu Yun&#39;s Blog" title="Liu Yun&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/blog/" title="Liu Yun&#39;s Blog">Liu Yun&#39;s Blog</a></h1>
+				<h2 class="blog-motto">坚持的意义在于坚持的本身！</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/blog/">Home</a></li>
+					
+						<li><a href="/blog/archives">Archives</a></li>
+					
+						<li><a href="/blog/tags">Tags</a></li>
+					
+						<li><a href="/blog/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2017/05/14/通信问题汇总/" title="通信问题汇总" itemprop="url">通信问题汇总</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/blog/about" title="Liu Yun" target="_blank" itemprop="author">Liu Yun</a>
+		
+  <p class="article-time">
+    <time datetime="2017-05-14T02:43:19.000Z" itemprop="datePublished"> Published 2017-05-14</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP和OSI模型"><span class="toc-number">1.</span> <span class="toc-text">TCP和OSI模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OSI七层模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI七层模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP四层模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手"><span class="toc-number">2.</span> <span class="toc-text">三次握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手安全性"><span class="toc-number">3.</span> <span class="toc-text">三次握手安全性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SYN攻击"><span class="toc-number">3.1.</span> <span class="toc-text">SYN攻击</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP四次挥手"><span class="toc-number">4.</span> <span class="toc-text">TCP四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务器上TIME-WAIT状态的连接过多，怎么解决？"><span class="toc-number">4.1.</span> <span class="toc-text">服务器上TIME_WAIT状态的连接过多，怎么解决？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP和UDP的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP是如何保证可靠的"><span class="toc-number">6.</span> <span class="toc-text">TCP是如何保证可靠的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动窗口协议"><span class="toc-number">7.</span> <span class="toc-text">滑动窗口协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#发送窗口"><span class="toc-number">7.1.</span> <span class="toc-text">发送窗口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#接收窗口"><span class="toc-number">7.2.</span> <span class="toc-text">接收窗口</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h3 id="TCP和OSI模型"><a href="#TCP和OSI模型" class="headerlink" title="TCP和OSI模型"></a>TCP和OSI模型</h3><h4 id="OSI七层模型"><a href="#OSI七层模型" class="headerlink" title="OSI七层模型"></a>OSI七层模型</h4><p><img src="https://camo.githubusercontent.com/bd889453dde179bf0fa69d835456f7b89e71547f/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350312e6a7067" alt="img"></p>
+<p>对应的协议为</p>
+<p><img src="https://camo.githubusercontent.com/555dfd3ffcf6c3c86cc3598ad2baaedbc93a4daa/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350322e676966" alt="img"></p>
+<a id="more"></a>
+<h4 id="TCP四层模型"><a href="#TCP四层模型" class="headerlink" title="TCP四层模型"></a>TCP四层模型</h4><p><img src="http://osv6ivbbn.bkt.clouddn.com/18-8-21/63976077.jpg" alt=""></p>
+<p>相同点：</p>
+<ol>
+<li><p>ISO/OSI参考模型和TCP/IP参考模型都采用了层次结构的概念；</p>
+</li>
+<li><p>都能够提供面向连接(TCP协议)和无连接(UDP协议)两种通信服务机制。</p>
+</li>
+</ol>
+<p>不同点：</p>
+<ol>
+<li>前者是七层模型结构，后者是四层模型结构；</li>
+<li>对可靠性要求不同，TCP/IP参考模型的要求更高；</li>
+<li>ISO/OSI参考模型是在协议开发之前设计的，具有通用性；TCP/IP参考模型则是在协议集已有的情况下建立的，不适用非TCP/IP网络；</li>
+<li>实际市场应用不同， ISO/OSI参考模型只是理论上的模型，并没有成熟的产品支持；而TCP/IP参考模型已经成为“实际上的国际标准”。</li>
+</ol>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="http://osv6ivbbn.bkt.clouddn.com/18-8-21/93951637.jpg" alt="三次握手"></p>
+<ol>
+<li><p>client向服务端发送SYN=1，seq赋值为随机数，client的状态变为：<code>SYNS_SENT</code></p>
+</li>
+<li><p>server收到请求后，向client发送SYN=1，ACK=1，seq赋值为随机数，ack为client发送的随机数+1，状态变为<code>SYN_RCVD</code></p>
+</li>
+<li><p>client向服务端发送ACK=1，ack为server发送的随机数+1，此时client的状态为<code>ESTABLISHED</code></p>
+</li>
+<li><p>server收到请求后，状态变化为<code>ESTABLISHED</code></p>
+</li>
+</ol>
+<h3 id="三次握手安全性"><a href="#三次握手安全性" class="headerlink" title="三次握手安全性"></a>三次握手安全性</h3><h4 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h4><p>   在三次握手过程中，Server发送SYN-ACK之后，收到Client的ACK之前的TCP连接称为半连接（half-openconnect），此时Server处于SYN_RCVD状态，当收到ACK后，Server转入ESTABLISHED状态。SYN攻击就是Client在短时间内伪造大量不存在的IP地址，并向Server不断地发送SYN包，Server回复确认包，并等待Client的确认，由于源地址是不存在的，因此，Server需要不断重发直至超时，这些伪造的SYN包将产时间占用未连接队列，导致正常的SYN请求因为队列满而被丢弃，从而引起网络堵塞甚至系统瘫痪。SYN攻击是一种典型的DDOS攻击，检测SYN攻击的方式非常简单，即当Server上有大量半连接状态且源IP地址是随机的，则可以断定遭到SYN攻击了，使用如下命令可以让之现行：</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>netstat -nap | grep SYN_RECV</span><br></pre></td></tr></table></figure>
+<h3 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h3><p>   四次挥手表示TCP断开连接的时候，需要客户端和服务端总共发送4个包以确认连接的断开。因为TCP是一个全双工的协议，在socket编程中，任何一方执行<code>close()</code> 操作都会即可产生挥手。</p>
+<p><img src="http://osv6ivbbn.bkt.clouddn.com/18-8-21/39499078.jpg" alt="TCP四次挥手"></p>
+<h4 id="服务器上TIME-WAIT状态的连接过多，怎么解决？"><a href="#服务器上TIME-WAIT状态的连接过多，怎么解决？" class="headerlink" title="服务器上TIME_WAIT状态的连接过多，怎么解决？"></a>服务器上TIME_WAIT状态的连接过多，怎么解决？</h4><blockquote>
+<p>对于TIME_WAIT的存在，有两个理由。一个原因是为了防止一个连接中延迟的数据段会被后序的连接错误的解析。当一个连接处于2MSL状态的时候，任何到达的数据段都将会被丢弃。第二个原因是为了实现TCP全双工连接的终止可靠性。</p>
+</blockquote>
+<p>首先通过以下命令查看TIME_WAIT的数量<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -an | grep TIME_WAIT | wc -l</span><br></pre></td></tr></table></figure></p>
+<p>修改内核参数<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line">net.ipv4.tcp_tw_recycle = 1</span><br></pre></td></tr></table></figure></p>
+<p>打开系统的TIME_WAIT的重用和快速回收。</p>
+<p>###为什么连接的时候是三次握手，关闭的时候却是四次握手？</p>
+<p>断开连接时，不保证数据都传输完毕，所以需要四次。</p>
+<p>三次握手是因为因为当 Server 端收到 Client 端的 SYN 连接请求报文后，可以直接发送 SYN+ACK 报文。其中 ACK报文是用来应答的， SYN 报文是用来同步的。但是关闭连接时，当 Server 端收到 FIN 报文时，很可能并不会立即关闭 SOCKET（因为可能还有消息没处理完），所以只能先回复一个 ACK 报文，告诉 Client 端， “你发的 FIN 报文我收到了”。只有等到我 Server 端所有的报文都发送完了，我才能发送 FIN 报文，因此不能一起发送。故需要四步握手 </p>
+<h3 id="TCP和UDP的区别"><a href="#TCP和UDP的区别" class="headerlink" title="TCP和UDP的区别"></a>TCP和UDP的区别</h3><ol>
+<li>TCP提供的是面向连接的、可靠的数据流传输；UDP提供的是非面向连接的、不可靠的数据流传输。</li>
+<li>TCP提供可靠的服务，通过TCP连接传送的数据，无差错、不丢失，不重复，按序到达；UDP尽最大努力交付，即不保证可靠交付。</li>
+<li>TCP面向字节流；UDP面向报文。</li>
+<li>TCP连接只能是点到点的；UDP支持一对一、一对多、多对一和多对多的交互通信。</li>
+<li>TCP首部开销20字节；UDP的首部开销小，只有8个字节。</li>
+<li>TCP的逻辑通信信道是全双工的可靠信道；UDP的逻辑通信信道是不可靠信道。</li>
+</ol>
+<h3 id="TCP是如何保证可靠的"><a href="#TCP是如何保证可靠的" class="headerlink" title="TCP是如何保证可靠的"></a>TCP是如何保证可靠的</h3><p>TCP在数据包接收无序、丢失或在交付期间被破坏时，负责数据恢复。它通过为其发送的每个数据包提供一个序号来完成此恢复。记住，较低的网络层会将每个数据包视为一个独立的单元，因此，数据包可以沿完全不同的路径发送，即使它们都是同一消息的组成部分。这种路由与网络层处理分段和重新组装数据包的方式非常相似，只是级别更高而已。</p>
+<p>为确保正确地接收数据，TCP要求在目标计算机成功收到数据时发回一个确认（即 ACK）。如果在某个时限内未收到相应的 ACK，将重新传送数据包。如果网络拥塞，这种重新传送将导致发送的数据包重复。但是，接收计算机可使用数据包的序号来确定它是否为重复数据包，并在必要时丢弃它。</p>
+<h3 id="滑动窗口协议"><a href="#滑动窗口协议" class="headerlink" title="滑动窗口协议"></a>滑动窗口协议</h3><p>如果数据的传送与接收过程当中出现收方来不及接收的情况，这时就需要对发方进行控制以免数据丢失。利用滑动窗口机制可以很方便的在 TCP连接上实现对发送方的流量控制。 TCP 的窗口单位是字节，不是报文段，发送方的发送窗口不能超过接收方给出的接收窗口的数值 </p>
+<p>发送和接受方都会维护一个数据帧的序列，这个序列被称作窗口。发送方的窗口大小由接受方确定，目的在于控制发送速度，以免接受方的缓存不够大，而导致溢出，同时控制流量也可以避免网络拥塞</p>
+<h4 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h4><p>就是发送端允许连续发送的幀的序号表。发送端可以不等待应答而连续发送的最大幀数称为发送窗口的尺寸 </p>
+<h4 id="接收窗口"><a href="#接收窗口" class="headerlink" title="接收窗口"></a>接收窗口</h4><p>接收方允许接收的幀的序号表，凡落在 接收窗口内的幀，接收方都必须处理，落在接收窗口外的幀被丢弃。</p>
+<p>接收方每次允许接收的幀数称为接收窗口的尺寸 </p>
+<p>演示地址 </p>
+<p><a href="https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/selective-repeat-protocol/index.html" target="_blank" rel="noopener">https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/selective-repeat-protocol/index.html</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/blog/categories/网络/">网络</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/blog/tags/协议/">协议</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://a8167270.github.io/blog/2017/05/14/通信问题汇总/" data-title="通信问题汇总 | Liu Yun&#39;s Blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2018/04/25/从源码理解Tomcat-架构(一)/" title="从源码理解Tomcat-架构(一)">
+  <strong>上一篇：</strong><br/>
+  <span>
+  从源码理解Tomcat-架构(一)</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2017/04/25/struts2源码阅读/"  title="struts2源码阅读">
+ <strong>下一篇：</strong><br/> 
+ <span>struts2源码阅读
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP和OSI模型"><span class="toc-number">1.</span> <span class="toc-text">TCP和OSI模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OSI七层模型"><span class="toc-number">1.1.</span> <span class="toc-text">OSI七层模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP四层模型"><span class="toc-number">1.2.</span> <span class="toc-text">TCP四层模型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手"><span class="toc-number">2.</span> <span class="toc-text">三次握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三次握手安全性"><span class="toc-number">3.</span> <span class="toc-text">三次握手安全性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SYN攻击"><span class="toc-number">3.1.</span> <span class="toc-text">SYN攻击</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP四次挥手"><span class="toc-number">4.</span> <span class="toc-text">TCP四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务器上TIME-WAIT状态的连接过多，怎么解决？"><span class="toc-number">4.1.</span> <span class="toc-text">服务器上TIME_WAIT状态的连接过多，怎么解决？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP和UDP的区别"><span class="toc-number">5.</span> <span class="toc-text">TCP和UDP的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP是如何保证可靠的"><span class="toc-number">6.</span> <span class="toc-text">TCP是如何保证可靠的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动窗口协议"><span class="toc-number">7.</span> <span class="toc-text">滑动窗口协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#发送窗口"><span class="toc-number">7.1.</span> <span class="toc-text">发送窗口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#接收窗口"><span class="toc-number">7.2.</span> <span class="toc-text">接收窗口</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/blog/categories/Java/" title="Java">Java<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blog/categories/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blog/categories/杂谈/" title="杂谈">杂谈<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/blog/categories/网络/" title="网络">网络<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/blog/tags/Tomcat/" title="Tomcat">Tomcat<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/协议/" title="协议">协议<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/JavaWeb/" title="JavaWeb">JavaWeb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/struts2/" title="struts2">struts2<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/blog/tags/代码/" title="代码">代码<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://segmentfault.com/u/a8167270" target="_blank" title="Segmentfault">Segmentfault</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 始终相信努力会有结果！ <br/>
+			</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/blog/about" target="_blank" title="Liu Yun">Liu Yun</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/blog/js/jquery-2.0.3.min.js"></script>
+<script src="/blog/js/jquery.imagesloaded.min.js"></script>
+<script src="/blog/js/gallery.js"></script>
+<script src="/blog/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?1429030d1f3dbf7c167565c77aab3bc8";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/blog/img/scrollup.png"/></a>
+	</div>
+	<script src="/blog/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
